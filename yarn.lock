@@ -39,6 +39,11 @@ angular-animate@^1.8.2:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.8.2.tgz#a3045e523ffb8d7fcbebd3cb68d1fdd474665ced"
   integrity sha512-Jbr9+grNMs9Kj57xuBU3Ju3NOPAjS1+g2UAwwDv7su1lt0/PLDy+9zEwDiu8C8xJceoTbmBNKiWGPJGBdCQLlA==
 
+angular-bootstrap-contextmenu@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/angular-bootstrap-contextmenu/-/angular-bootstrap-contextmenu-1.2.1.tgz#51d627ed0886e2afc49e3578f474204caf89ca72"
+  integrity sha512-Jqm5ESXUJxzp5oYCuV2LO2FDyOIZJdJ6Bf7ZmoEcM0iEiGLAcqe+fArleBTeF6jhCFX4NqHFq00nEiF1XhvlKw==
+
 angular-messages@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/angular-messages/-/angular-messages-1.8.2.tgz#47f0cf913030bc2231423ab9388acc14dd931837"

@@ -5304,9 +5304,6 @@ a.list-group-item:focus {
 #nav-sidebar[show=true] {
   width:250px;
 }
-#nav-sidebar[show=false]{
-  width:0;
-}
 
 @media screen and (min-width: 992px) {
   .header-navbar-fixed.sidebar-l.sidebar-o #header-navbar {
@@ -13992,6 +13989,19 @@ margin-right:5px;
     border-radius:6px;
 }
 
+.modal.fade.in {
+  opacity: 1;
+}
+.modal:not(.in) .modal-dialog {
+  transform: translate(0, -100px);
+}
+.modal.in .modal-dialog {
+  transform: translate(0, -50px);
+}
+.modal-backdrop.in {
+  opacity: 0.5;
+}
+
 .tablesearch .select2-container {
     width:95% !important;
 }
@@ -14185,4 +14195,8 @@ table tr a:hover{
     bottom: -1px;
     left: 0px;
     background-color: #224994;
+}
+
+.card-base {
+  cursor: pointer;
 }

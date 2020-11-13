@@ -2,8 +2,6 @@
 (function () {
     'use strict';
 
-    console.log("running");
-
     // Create our angular module
     var App = angular.module('app', [
         'ngStorage',
@@ -15,6 +13,7 @@
         'ngAnimate',
         'ngMessages',
         'ngFileUpload',
+        'ui.bootstrap.contextMenu'
     ]);
 
     // // Router configuration
@@ -293,7 +292,6 @@
     App.run(function($rootScope, uiHelpers) {
         // Access uiHelpers easily from all controllers
         $rootScope.helpers = uiHelpers;
-        console.log("inrun");
     
         // On window resize or orientation change resize #main-container & Handle scrolling
         var resizeTimeout;

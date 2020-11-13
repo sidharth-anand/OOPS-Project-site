@@ -1,9 +1,7 @@
-/*! oops-site 2020-11-08 */
+/*! oops-site 2020-11-13 */
 
 (function () {
     'use strict';
-
-    console.log("running");
 
     // Create our angular module
     var App = angular.module('app', [
@@ -16,6 +14,7 @@
         'ngAnimate',
         'ngMessages',
         'ngFileUpload',
+        'ui.bootstrap.contextMenu'
     ]);
 
     // // Router configuration
@@ -294,7 +293,6 @@
     App.run(function($rootScope, uiHelpers) {
         // Access uiHelpers easily from all controllers
         $rootScope.helpers = uiHelpers;
-        console.log("inrun");
     
         // On window resize or orientation change resize #main-container & Handle scrolling
         var resizeTimeout;
@@ -316,6 +314,173 @@
         angular.bootstrap(document, ['app']);
         document.documentElement.scrollTop = 0;
     });
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardBaseController", cardBaseController);
+    cardBaseController.$inject = ["$scope", "$uibModal"];
+
+    function cardBaseController($scope, $uibModal) {
+        let ctrl = this;
+
+        ctrl.cardOptions = $scope.cardOptions;
+        ctrl.cardData = $scope.cardData;
+
+        ctrl.expand = function() {
+            let expanded = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: "modal-title",
+                ariaDescribedBy: "modal-body",
+                templateUrl: "app/modules/client/cards/expanded/card-base.expanded.html",
+                size: "md modal-dialog-centered",
+                controller: "cardExpandedController",
+                controllerAs: "cardExpandedController",
+                resolve: {
+                    options: () => ctrl.cardOptions,
+                    data: () => ctrl.cardData
+                }
+            });
+
+            expanded.result.then(d => {
+                if(ctrl.cardOptions.onChange) {
+                    ctrl.cardOptions.onChange(d);
+                }
+            }).catch(d => {
+
+            });
+        }
+
+        ctrl.contextMenuOptions = 
+        [
+            {
+                text: "Edit",
+                click: function() {
+                    ctrl.expand()
+                }
+            },
+            {
+                text: "Share",
+                click: function() {
+                    if(ctrl.cardOptions.getShareData) {
+                        let shareData = ctrl.cardOptions.getShareData();
+                        if(!shareData.title || !shareData.text) {
+                            throw error("Cannot share the given object");
+                        }   
+
+                        if(navigator.share) {
+                            navigator.share(shareData);
+                        } else {
+                            console.log("Use email here");
+                        }
+                    }
+                }
+            },
+            {
+                text: "Delete",
+                click: function($itemScope, $event) {
+                    angular.element($event.delegateTarget).remove();
+                }
+            }
+        ]
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardExpandedController", cardExpandedController);
+    cardExpandedController.$inject = ["$uibModalInstance", "$timeout", "options", "data"];
+
+    function cardExpandedController($uibModalInstance, $timeout, options, data) {
+        let ctrl = this;
+
+        ctrl.options = options;
+        ctrl.data = JSON.parse(JSON.stringify(data));
+
+        ctrl.editingTitle = false;
+
+        ctrl.getChanged = function() {
+            let changed = {};
+            Object.keys(data).forEach(k => {
+                if(JSON.stringify(data[k]) !== JSON.stringify(ctrl.data[k])) {
+                    changed[k] = ctrl.data[k];
+                }
+            });
+            return changed;
+        }
+
+        ctrl.toggleTitleEdit = function() {
+            ctrl.editingTitle = !ctrl.editingTitle;
+            if(ctrl.editingTitle) {
+                $timeout(() => {
+                    angular.element("#modal-name-input").trigger("focus");
+                })
+            }
+        }
+
+        ctrl.save = function() {
+            $uibModalInstance.close(ctrl.getChanged());
+        }
+
+        ctrl.close = function() {
+            $uibModalInstance.dismiss();
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardTextController", cardTextController);
+    cardTextController.$inject = [];
+
+    function cardTextController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-text.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "Text Card",
+            type: "Text",
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardTextExpandedController", cardTextExpandedController);
+    cardTextExpandedController.$inject = ["$scope"];
+
+    function cardTextExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.data = $scope.cardExpandedController.data;
+    }
+
 })();;
 (function(){
     'use strict';
@@ -388,6 +553,92 @@
             restrict: 'E',
             templateUrl: "app/modules/sidebar/app-sidebar.html",
             replace: true
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardBase", cardBase);
+    cardBase.$inject = ["$rootScope", "$compile"];
+
+    function cardBase($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                cardOptions: "=options",
+                cardData: "=data"
+            },
+            templateUrl: "app/modules/client/cards/normal/card-base.html",
+            controller: "cardBaseController",
+            controllerAs: "cardBaseController",
+            replace: true
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardText", cardText);
+    cardText.$inject = ["$rootScope", "$compile"];
+
+    function cardText($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-text.html',
+            controller: "cardTextController",
+            controllerAs: "cardTextController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("ngContenteditable", ngContenteditable);
+    ngContenteditable.$inject = ["$sce"];
+
+    function ngContenteditable($sce) {
+        return {
+            restrict: 'A',
+            require: '?ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                if(!ngModel || !attrs.contenteditable)
+                    return;
+
+                ngModel.$render = function() {
+                    element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+                };
+
+                element.on('keyup change', function(){
+                    scope.$evalAsync(read);
+                });
+
+                element.on('click', function(){
+                    element.attr("contenteditable", "true");
+                });
+
+                element.on('blur', function() {
+                    element.attr("contenteditable", "false");
+                });
+
+                function read() {
+                    let html = element.html();
+                    if(attrs.stripBr && html == '<br>') {
+                        html = '';
+                    }
+                    ngModel.$setViewValue(html);
+                }
+            }
         }
     }
 
