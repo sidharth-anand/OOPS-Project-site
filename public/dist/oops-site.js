@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-14 */
+/*! oops-site 2020-11-15 */
 
 (function () {
     'use strict';
@@ -493,7 +493,13 @@
     function cardToDoListExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.data = $scope.cardExpandedController.data;
+        ctrl.todoList = [];
+        ctrl.task = $scope.cardToDoListExpandedController.data;
+
+        ctrl.todoAdd = function(){
+            ctrl.todoList.push({todoText: ctrl.task ,done: false});
+            ctrl.task = "";
+        }
     }
 
 })();;
