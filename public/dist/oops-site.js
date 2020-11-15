@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-13 */
+/*! oops-site 2020-11-15 */
 
 (function () {
     'use strict';
@@ -487,6 +487,77 @@
 
     let App = angular.module("app");
 
+    App.controller("cardToDoListExpandedController", cardToDoListExpandedController);
+    cardToDoListExpandedController.$inject = ["$scope"];
+
+    function cardToDoListExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.todoList = $scope.cardExpandedController.data.list;
+        ctrl.task = "";
+
+        ctrl.todoAdd = function(){
+            ctrl.todoList.push({todoText: ctrl.task ,done: false});
+            ctrl.task = "";
+        };
+
+        ctrl.remove = function(){
+            let oldList = ctrl.todoList;
+            ctrl.todoList = [];
+            angular.forEach(oldList,function(x){
+                if(!x.done){
+                    ctrl.todoList.push(x);
+                }
+            }) 
+            
+        };
+
+        ctrl.removeAll = function(){
+            ctrl.todoList = []
+        }
+    };
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardToDoListController", cardToDoListController);
+    cardToDoListController.$inject = [];
+
+    function cardToDoListController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-to-do-list.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "To do List card",
+            type: "To-do list",
+            list:  [],
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("headerController", headerController);
     headerController.$inject = ['$scope', '$rootScope', '$state', '$stateParams'];
 
@@ -594,6 +665,25 @@
             templateUrl: 'app/modules/client/cards/normal/card-text.html',
             controller: "cardTextController",
             controllerAs: "cardTextController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardToDoList", cardToDoList);
+    cardToDoList.$inject = ["$rootScope", "$compile"];
+
+    function cardToDoList($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-to-do-list.html',
+            controller: "cardToDoListController",
+            controllerAs: "cardToDoListController",
             replace: true,
         }
     }
