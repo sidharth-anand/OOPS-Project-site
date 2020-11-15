@@ -27,6 +27,10 @@
             }) 
             
         };
+
+        ctrl.removeAll = function(){
+            ctrl.todoList = []
+        }
     };
 
 })();

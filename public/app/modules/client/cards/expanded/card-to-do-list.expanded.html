@@ -4,11 +4,12 @@
         <input type="text" ng-model="cardToDoListExpandedController.task" placeholder="Add a new task">
         <input type="submit" value="Add Task">
         
-    </form>
+     </form>
     <div ng-repeat="x in cardToDoListExpandedController.todoList">
         <input type="checkbox" ng-model="x.done">
-        <span ng-bind="x.todoText"></span>
+        <span contenteditable="true" ng-contenteditable ng-model="x.todoText"></span>
     </div>
-    <p><button ng-click="cardToDoListExpandedController.remove()">Remove marked tasks</button></p>
+    <span><button ng-click="cardToDoListExpandedController.remove()">Remove marked tasks</button></span>
+    <span><button ng-click="cardToDoListExpandedController.removeAll()">Remove all</button></span>
     
 </div>
