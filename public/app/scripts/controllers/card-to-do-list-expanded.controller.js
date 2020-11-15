@@ -13,9 +13,20 @@
         ctrl.task = "";
 
         ctrl.todoAdd = function(){
-            ctrl.todoList.push({todoText: ctrl.task  ,done: false});
+            ctrl.todoList.push({todoText: ctrl.task ,done: false});
             ctrl.task = "";
-        }
-    }
+        };
+
+        ctrl.remove = function(){
+            let oldList = ctrl.todoList;
+            ctrl.todoList = [];
+            angular.forEach(oldList,function(x){
+                if(!x.done){
+                    ctrl.todoList.push(x);
+                }
+            }) 
+            
+        };
+    };
 
 })();
