@@ -14200,3 +14200,7 @@ table tr a:hover{
 .card-base {
   cursor: pointer;
 }
+
+.strike {
+  text-decoration: line-through;
+}

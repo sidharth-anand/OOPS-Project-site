@@ -7,7 +7,7 @@
      </form>
     <div ng-repeat="x in cardToDoListExpandedController.todoList">
         <input type="checkbox" ng-model="x.done">
-        <span contenteditable="true" ng-contenteditable ng-model="x.todoText"></span>
+        <span contenteditable="true" ng-class="{strike: x.done}" ng-contenteditable ng-model="x.todoText"></span>
     </div>
     <span><button ng-click="cardToDoListExpandedController.remove()">Remove marked tasks</button></span>
     <span><button ng-click="cardToDoListExpandedController.removeAll()">Remove all</button></span>
