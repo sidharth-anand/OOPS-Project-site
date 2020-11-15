@@ -9,11 +9,11 @@
     function cardToDoListExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.todoList = [];
-        ctrl.task = $scope.cardToDoListExpandedController.data;
+        ctrl.todoList = $scope.cardExpandedController.data.list;
+        ctrl.task = "";
 
         ctrl.todoAdd = function(){
-            ctrl.todoList.push({todoText: ctrl.task ,done: false});
+            ctrl.todoList.push({todoText: ctrl.task  ,done: false});
             ctrl.task = "";
         }
     }

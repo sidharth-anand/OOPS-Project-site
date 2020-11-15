@@ -1,7 +1,7 @@
 <div ng-controller="cardToDoListExpandedController as cardToDoListExpandedController">
     
      <form ng-submit = "cardToDoListExpandedController.todoAdd()">
-        <input type="text" ng-model="cardToDoListExpandedController.data" placeholder="Add a new task">
+        <input type="text" ng-model="cardToDoListExpandedController.task" placeholder="Add a new task">
         <input type="submit" value="Add Task">
     </form>
     <div ng-repeat="x in cardToDoListExpandedController.todoList">
