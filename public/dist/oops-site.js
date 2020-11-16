@@ -511,6 +511,57 @@
 
     let App = angular.module("app");
 
+    App.controller("cardStockController", cardStockController);
+    cardStockController.$inject = [];
+
+    function cardStockController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-stock.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "Grocery stock Card",
+            type: "Grocery stock",
+            
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardStockExpandedController", cardStockExpandedController);
+    cardStockExpandedController.$inject = ["$scope"];
+
+    function cardStockExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.data = $scope.cardExpandedController.data;
+
+        
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardTextController", cardTextController);
     cardTextController.$inject = [];
 
@@ -738,6 +789,25 @@
             templateUrl: 'app/modules/client/cards/normal/card-reminder.html',
             controller: "cardReminderController",
             controllerAs: "cardReminderController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardStock", cardStock);
+    cardStock.$inject = ["$rootScope", "$compile"];
+
+    function cardStock($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-stock.html',
+            controller: "cardStockController",
+            controllerAs: "cardStockController",
             replace: true,
         }
     }
