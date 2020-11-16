@@ -1125,6 +1125,34 @@ fieldset[disabled] .all-wrapper a.fc-button,
     background-color: #e65252;
     border-color: #e65252
 }
+.btn-outline-dark {
+  color: #343a40;
+  background-image: none;
+  background-color: transparent;
+  border-color: #343a40
+}
+.btn-outline-dark:hover {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40
+}
+.btn-outline-dark:focus,
+.btn-outline-dark.focus {
+  -webkit-box-shadow: 0 0 0 2px rgba(30, 32, 36, 0.5);
+  box-shadow: 0 0 0 2px rgba(30, 32, 36, 0.5)
+}
+.btn-outline-dark.disabled,
+.btn-outline-dark:disabled {
+  color: #343a40;
+  background-color: transparent
+}
+.btn-outline-dark:active,
+.btn-outline-dark.active,
+.show>.btn-outline-dark.dropdown-toggle {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40
+}
 .btn-link {
     font-weight: 400;
     color: #3b75e3;
