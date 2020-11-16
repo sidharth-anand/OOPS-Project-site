@@ -8,7 +8,19 @@
             <button type="submit">Add reminder</button>
     </form>
     <div ng-repeat = "x in cardReminderExpandedController.reminderList">
-        <p>Date: <span contenteditable="True" ng-contenteditable ng-model="x.date"></span></p>
-        <p>Time: <span contenteditable="True" ng-contenteditable ng-model="x.time"></span></p>
+        <div class="reminder" ng-click="editing=true">
+        <p>Date: <span>{{x.date | date: 'MM/dd/yyyy'}}</span></p>
+        <p>Time: <span>{{x.time | date: 'HH:mm:ss'}}</span></p>
+        
+        <form ng-show="editing" ng-submit="editing=false">
+            <label>Date</label>
+            <input type="date" ng-model="x.date" placeholder="Date" ng-required/></br>
+            <label>Time</label>
+            <input type="time" ng-model="x.time" placeholder="Time" ng-required/></br>
+            <button type="submit">Save changes</button>
+            <button ng-click="cardReminderExpandedController.removeReminder(x)">Remove Reminder</button>
+        </form>
+        </div>
     </div>
+    <button ng-click="cardReminderExpandedController.removeAll()">Remove all reminders</button>
 </div>
