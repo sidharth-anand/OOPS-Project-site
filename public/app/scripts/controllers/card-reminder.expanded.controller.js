@@ -9,7 +9,15 @@
     function cardReminderExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.data = $scope.cardExpandedController.data;
+        ctrl.reminderList = $scope.cardExpandedController.data.reminderList;
+        ctrl.date = "";
+        ctrl.time = "";
+
+        ctrl.addReminder = function(){
+            ctrl.reminderList.push({date: ctrl.date, time: ctrl.time});
+            ctrl.date = "";
+            ctrl.time = "";
+        }
     }
 
 })();

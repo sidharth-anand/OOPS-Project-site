@@ -1,8 +1,14 @@
 <div ng-controller="cardReminderExpandedController as cardReminderExpandedController">
-    <p contenteditable="true" ng-contenteditable ng-model="cardReminderExpandedController.data.text"></p>
-    <!-- <form>
-        <div class="input-group">
-            <textarea class="form-control" ng-model="cardTextExpandedController.data.text"></textarea>
-        </div>
-    </form> -->
+    
+    <form ng-submit = cardReminderExpandedController.addReminder()>
+            <label>Date</label><br>
+            <input type="date" ng-model="cardReminderExpandedController.date" placeholder="Date" ng-required/><br>
+            <label>Time</label><br>
+            <input type="time" ng-model="cardReminderExpandedController.time" placeholder="Time" ng-required/><br>
+            <button type="submit">Add reminder</button>
+    </form>
+    <div ng-repeat = "x in cardReminderExpandedController.reminderList">
+        <p>Date: <span contenteditable="True" ng-contenteditable ng-model="x.date"></span></p>
+        <p>Time: <span contenteditable="True" ng-contenteditable ng-model="x.time"></span></p>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-15 */
+/*! oops-site 2020-11-16 */
 
 (function () {
     'use strict';
@@ -462,7 +462,7 @@
         ctrl.data = {
             name: "Reminder Card",
             type: "Reminder",
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            reminderList: []
         }
     }
 
@@ -478,7 +478,15 @@
     function cardReminderExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.data = $scope.cardExpandedController.data;
+        ctrl.reminderList = $scope.cardExpandedController.data.reminderList;
+        ctrl.date = "";
+        ctrl.time = "";
+
+        ctrl.addReminder = function(){
+            ctrl.reminderList.push({date: ctrl.date | date: "yyyy-MM-dd", time: ctrl.time});
+            ctrl.date = "";
+            ctrl.time = "";
+        }
     }
 
 })();;
