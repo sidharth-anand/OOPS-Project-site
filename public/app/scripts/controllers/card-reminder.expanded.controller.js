@@ -34,7 +34,6 @@
             ctrl.reminderList = [];
         };
 
-        ctrl.showRemoveAll = Boolean(ctrl.reminderList.length)
     }
 
 })();
