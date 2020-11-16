@@ -11,6 +11,7 @@
 
         ctrl.cardOptions = $scope.cardOptions;
         ctrl.cardData = $scope.cardData;
+        ctrl.groupInfo = $scope.groupData;
 
         ctrl.expand = function() {
             let expanded = $uibModal.open({
@@ -23,7 +24,8 @@
                 controllerAs: "cardExpandedController",
                 resolve: {
                     options: () => ctrl.cardOptions,
-                    data: () => ctrl.cardData
+                    data: () => ctrl.cardData,
+                    group: () => ctrl.groupInfo
                 }
             });
 

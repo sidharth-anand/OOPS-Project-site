@@ -4,13 +4,14 @@
     let App = angular.module("app");
 
     App.controller("cardExpandedController", cardExpandedController);
-    cardExpandedController.$inject = ["$uibModalInstance", "$timeout", "options", "data"];
+    cardExpandedController.$inject = ["$uibModalInstance", "$timeout", "options", "data", "group"];
 
-    function cardExpandedController($uibModalInstance, $timeout, options, data) {
+    function cardExpandedController($uibModalInstance, $timeout, options, data, group) {
         let ctrl = this;
 
         ctrl.options = options;
         ctrl.data = JSON.parse(JSON.stringify(data));
+        ctrl.group = group;
 
         ctrl.editingTitle = false;
 

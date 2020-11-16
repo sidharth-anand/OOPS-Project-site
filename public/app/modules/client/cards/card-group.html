@@ -1,0 +1,8 @@
+<div class="col-md-2 border border-success my-3 pt-2 pb-3 px-0">
+    <h4>{{cardGroupController.data.name}}</h4>
+    <div ng-repeat="card in cardGroupController.data.cards">
+        <div ng-switch="card.type">
+            <card-text ng-switch-when="Text" data="card" group="cardGroupController.groupInfo"></card-text>
+        </div>
+    </div>
+</div>

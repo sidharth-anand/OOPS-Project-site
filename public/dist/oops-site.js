@@ -29,7 +29,9 @@
         $stateProvider
             .state('home', {
                 url: '/home',
-                templateUrl: 'app/modules/client/home.html'
+                templateUrl: 'app/modules/client/home.html',
+                controller: "homeController",
+                controllerAs: "homeController"
             })
             .state('verify-phone', {
                 url: '/verify-phone',
@@ -441,6 +443,10 @@
             $rootScope.Auth = Auth;
 
             $transitions.onBefore({}, transition => {
+                if(Auth.isUserVerified() && transition.to().data && transition.to().data.unAuth) {
+                    return transition.router.stateService.target('home');
+                }
+
                 if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
                     return transition.router.stateService.target(Auth.getRedirectStage());
                 }
@@ -478,6 +484,7 @@
 
         ctrl.cardOptions = $scope.cardOptions;
         ctrl.cardData = $scope.cardData;
+        ctrl.groupInfo = $scope.groupData;
 
         ctrl.expand = function() {
             let expanded = $uibModal.open({
@@ -490,7 +497,8 @@
                 controllerAs: "cardExpandedController",
                 resolve: {
                     options: () => ctrl.cardOptions,
-                    data: () => ctrl.cardData
+                    data: () => ctrl.cardData,
+                    group: () => ctrl.groupInfo
                 }
             });
 
@@ -544,13 +552,14 @@
     let App = angular.module("app");
 
     App.controller("cardExpandedController", cardExpandedController);
-    cardExpandedController.$inject = ["$uibModalInstance", "$timeout", "options", "data"];
+    cardExpandedController.$inject = ["$uibModalInstance", "$timeout", "options", "data", "group"];
 
-    function cardExpandedController($uibModalInstance, $timeout, options, data) {
+    function cardExpandedController($uibModalInstance, $timeout, options, data, group) {
         let ctrl = this;
 
         ctrl.options = options;
         ctrl.data = JSON.parse(JSON.stringify(data));
+        ctrl.group = group;
 
         ctrl.editingTitle = false;
 
@@ -588,10 +597,25 @@
 
     let App = angular.module("app");
 
-    App.controller("cardTextController", cardTextController);
-    cardTextController.$inject = [];
+    App.controller("cardGroupController", cardGroupController);
+    cardGroupController.$inject = ["$rootScope", "$scope"];
 
-    function cardTextController() {
+    function cardGroupController($rootScope, $scope) {
+        let ctrl = this;
+
+        ctrl.data = $scope.groupData;
+        ctrl.groupInfo = {name: ctrl.data.name};
+    }
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardTextController", cardTextController);
+    cardTextController.$inject = ["$scope"];
+
+    function cardTextController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -609,11 +633,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "Text Card",
-            type: "Text",
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();;
@@ -668,6 +689,37 @@
                 ctrl.hideExtra = false;
             }
         });
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("homeController", homeController);
+    homeController.$inject = ["$rootScope"];
+
+    function homeController($rootScope) {
+        let ctrl = this;
+
+        ctrl.cardGroups = [
+            {
+                name: "Cards",
+                cards: [
+                    {
+                        name: "Text Card",
+                        type: "Text",
+                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    },
+                    {
+                        name: "Text Card 2",
+                        type: "Text",
+                        text: "asdvbnq 123 sadkf aerj nmsd fwkreh zd "
+                    }
+                ]
+            }
+        ];
     }
 
 })();;
@@ -803,7 +855,8 @@
             restrict: 'E',
             scope: {
                 cardOptions: "=options",
-                cardData: "=data"
+                cardData: "=data",
+                groupData: "=group"
             },
             templateUrl: "app/modules/client/cards/normal/card-base.html",
             controller: "cardBaseController",
@@ -818,12 +871,37 @@
 
     let App = angular.module("app");
 
+    App.directive("cardGroup", cardGroup);
+    cardGroup.$inject = ["$rootScope", "$compile"];
+
+    function cardGroup($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                groupData: "=data"
+            },
+            templateUrl: 'app/modules/client/cards/card-group.html',
+            controller: "cardGroupController",
+            controllerAs: "cardGroupController",
+            replace:true
+        }
+    }
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.directive("cardText", cardText);
     cardText.$inject = ["$rootScope", "$compile"];
 
     function cardText($rootScope, $compile) {
         return {
             restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
             templateUrl: 'app/modules/client/cards/normal/card-text.html',
             controller: "cardTextController",
             controllerAs: "cardTextController",

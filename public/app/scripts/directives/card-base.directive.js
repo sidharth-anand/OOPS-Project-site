@@ -11,7 +11,8 @@
             restrict: 'E',
             scope: {
                 cardOptions: "=options",
-                cardData: "=data"
+                cardData: "=data",
+                groupData: "=group"
             },
             templateUrl: "app/modules/client/cards/normal/card-base.html",
             controller: "cardBaseController",

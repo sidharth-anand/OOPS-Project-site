@@ -28,7 +28,9 @@
         $stateProvider
             .state('home', {
                 url: '/home',
-                templateUrl: 'app/modules/client/home.html'
+                templateUrl: 'app/modules/client/home.html',
+                controller: "homeController",
+                controllerAs: "homeController"
             })
             .state('verify-phone', {
                 url: '/verify-phone',
@@ -440,6 +442,10 @@
             $rootScope.Auth = Auth;
 
             $transitions.onBefore({}, transition => {
+                if(Auth.isUserVerified() && transition.to().data && transition.to().data.unAuth) {
+                    return transition.router.stateService.target('home');
+                }
+
                 if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
                     return transition.router.stateService.target(Auth.getRedirectStage());
                 }
