@@ -35,9 +35,23 @@
                         <input type="password" class="form-control" id="pwrinput" placeholder="">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-outline-success btn-block col-md-6 offset-md-3">Sign Up</button>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="occinput">Occupation</label>
+                        <select class="custom-select">
+                            <option value="student">Student</option>
+                            <option value="employed">Employed</option>
+                            <option value="jobsearch">Job Seeker</option>
+                            <option value="homemaker">Home Maker</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-white">Sign Up</label>
+                        <button type="submit" class="btn btn-outline-success btn-block">Sign Up</button>
+                    </div>
+                </div>
             </form>
-            <p class="form-text text-muted mt-2 text-center">Already a member? <a ui-sref="login">Sign In</a></p>
+            <p class="form-text text-muted mt-2">Already a member? <a ui-sref="login">Sign In</a></p>
         </div>
     </div>
 </div>
