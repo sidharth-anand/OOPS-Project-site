@@ -14204,3 +14204,9 @@ table tr a:hover{
 .strike {
   text-decoration: line-through;
 }
+
+.reminder {
+  border: 1px solid black;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
