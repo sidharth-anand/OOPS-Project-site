@@ -1,21 +1,43 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
-        <div class="col-md-2 mx-auto my-auto">
-            <form>
-                <div class="form-group">
-                  <label for="emailinput">Email</label>
-                  <input type="email" class="form-control" id="emailinput" aria-describedby="emailHelp" placeholder="johndoe@email.com">
+        <div class="col-md-4 mx-auto my-auto">
+            <h3 class="text-center mb-5">Sign Up for AppName</h3>
+            <form class="pt-2 mx-auto">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="nameinput">Name</label>
+                        <input type="text" class="form-control" id="nameinput" placeholder="John Doe">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="usernameinput">Username</label>
+                        <input type="text" class="form-control" id="usernameinput" placeholder="john_doe_1743">
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="pwinput">Password</label>
-                  <input type="password" class="form-control" id="pwinput" placeholder="">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="emailinput">Email</label>
+                        <input type="email" class="form-control" id="emailinput" placeholder="johndoe@email.com">
+                        <small class="form-text text-muted">We'll never share your email address with anyone else</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phoneinput">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneinput" placeholder="+91 1234567890">
+                        <small class="form-text text-muted">We'll never share your phone number with anyone else</small>
+                      </div>
                 </div>
-                <button type="submit" class="btn btn-outline-success btn-block">Log in</button>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="pwinput">Password</label>
+                        <input type="password" class="form-control" id="pwinput" placeholder="">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="pwrinput">Password Repeat</label>
+                        <input type="password" class="form-control" id="pwrinput" placeholder="">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-success btn-block col-md-6 offset-md-3">Sign Up</button>
             </form>
-            <div class="w-100 text-center my-3">Or</div>
-            <button class="btn btn-block btn-outline-danger text-center"><i class="fab fa-google mr-2"></i>Login With Google</button>
-            <button class="btn btn-block btn-outline-dark text-center"><i class="fab fa-github mr-2"></i>Login With Github</button>
-            <p class="form-text text-muted mt-2">First time here? <a ui-sref="register">Register</a></p>
+            <p class="form-text text-muted mt-2 text-center">Already a member? <a ui-sref="login">Sign In</a></p>
         </div>
     </div>
 </div>
