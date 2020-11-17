@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-16 */
+/*! oops-site 2020-11-17 */
 
 (function () {
     'use strict';
@@ -14,7 +14,8 @@
         'ngAnimate',
         'ngMessages',
         'ngFileUpload',
-        'ui.bootstrap.contextMenu'
+        'ui.bootstrap.contextMenu',
+        'angularjs-dropdown-multiselect'
     ]);
 
     // // Router configuration
@@ -511,6 +512,100 @@
 
     let App = angular.module("app");
 
+    App.controller("cardStockController", cardStockController);
+    cardStockController.$inject = [];
+
+    function cardStockController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-stock.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "Grocery stock Card",
+            type: "Grocery stock",
+            inventory: []
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardStockExpandedController", cardStockExpandedController);
+    cardStockExpandedController.$inject = ["$scope"];
+
+    function cardStockExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.inventory = $scope.cardExpandedController.data.inventory;
+
+        ctrl.groceriesList = [{
+            id: 1,
+            label: "Milk"
+        },
+        {
+            id: 2,
+            label: "Eggs"
+        },
+        {
+            id: 3,
+            label: "Rice"
+        },
+        {
+            id: 4,
+            label: "Water"
+        },
+        {
+            id: 5,
+            label: "Curd"
+        }]
+
+        ctrl.selectedModel = [];
+        ctrl.searchSettings = {enableSearch: true};
+
+        
+
+        ctrl.addToInventory = function(){
+            angular.forEach(ctrl.selectedModel,function(x){
+                ctrl.inventory.push({
+                    item: x.label,
+                    quantity: 1
+                })
+                ctrl.selectedModel = [];
+            })
+        };
+
+        ctrl.remove = function(inventoryItem){
+            ctrl.inventory.splice(ctrl.inventory.indexOf(inventoryItem),1);
+
+        }
+
+        
+
+        
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardTextController", cardTextController);
     cardTextController.$inject = [];
 
@@ -738,6 +833,25 @@
             templateUrl: 'app/modules/client/cards/normal/card-reminder.html',
             controller: "cardReminderController",
             controllerAs: "cardReminderController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardStock", cardStock);
+    cardStock.$inject = ["$rootScope", "$compile"];
+
+    function cardStock($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-stock.html',
+            controller: "cardStockController",
+            controllerAs: "cardStockController",
             replace: true,
         }
     }
