@@ -14210,3 +14210,29 @@ table tr a:hover{
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.groceries {
+  overflow-y: scroll;
+  height: 20rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.groceryCounter {
+  text-align: center;
+  width: 3rem;
+  margin-right: 1rem;
+}
+
+.grocery {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.cartItem {
+  display: inline-block;
+  text-align: center;
+  border: 2px solid black;
+  padding: 5px;
+  margin: 2px;
+}

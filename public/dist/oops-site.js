@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-16 */
+/*! oops-site 2020-11-17 */
 
 (function () {
     'use strict';
@@ -535,7 +535,7 @@
         ctrl.data = {
             name: "Grocery stock Card",
             type: "Grocery stock",
-            
+            cart: []
         }
     }
 
@@ -551,29 +551,39 @@
     function cardStockExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.data = $scope.cardExpandedController.data;
+        ctrl.cart = $scope.cardExpandedController.data.cart;
 
         ctrl.groceriesList = [{
             item: "Milk",
-            price: "20",
+            price: "20"
         },
         {
             item: "Eggs",
-            price: "40",
+            price: "40"
         },
         {
             item: "Rice",
-            price: "30",
+            price: "30" 
         },
         {
             item: "Water",
-            price: "25",
+            price: "25" 
         },
         {
             item: "Curd",
-            price: "90",
-        },
-        ]
+            price: "90"
+        }]
+
+        ctrl.quantity = []
+
+        ctrl.addToCart = function(item,price,index) {
+            
+         ctrl.cart.push({
+                item: item,
+                price: price,
+                quantity: ctrl.quantity[index]
+         })   
+        }
     }
 
 })();;

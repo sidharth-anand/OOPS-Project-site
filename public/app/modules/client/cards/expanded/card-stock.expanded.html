@@ -3,9 +3,24 @@
     <form>
         <input type="text" ng-model="searchText" placeholder="Search">
     </form>
-
-    <div ng-repeat="x in cardStockExpandedController.groceriesList | filter: searchText">
+    
+    <div class="groceries">
+    <div class="grocery" ng-repeat="x in cardStockExpandedController.groceriesList | filter: searchText">
         <p>Item: {{x.item}}</p>
         <p>Price: {{x.price}}</p>
+        <p>Quantity: <input class="groceryCounter" type="number" ng-model=cardStockExpandedController.quantity[cardStockExpandedController.groceriesList.indexOf(x)]>
+        <button type="submit" ng-click="cardStockExpandedController.addToCart(x.item,x.price,cardStockExpandedController.groceriesList.indexOf(x))">Add to cart</button></p>  
+    </div>
+    
+    </div>
+
+    <div class="cart">
+        <div class="cartItem" ng-repeat="y in cardStockExpandedController.cart">
+            <p>Item: {{y.item}}</p>
+            <p>Price: {{y.price}}</p>
+            <p>Quantity: {{y.quantity}}</p>
+
+        </div>
+
     </div>
 </div>
