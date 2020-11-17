@@ -32,16 +32,25 @@
             price: "90"
         }]
 
-        ctrl.quantity = []
+        ctrl.quantity = [];
 
         ctrl.addToCart = function(item,price,index) {
             
          ctrl.cart.push({
                 item: item,
-                price: price,
-                quantity: ctrl.quantity[index]
+                price: parseInt(price),
+                quantity: parseInt(ctrl.quantity[index])
          })   
-        }
+        };
+
+        ctrl.total = function() {
+            let total = 0;
+            angular.forEach(ctrl.cart,function(x){
+                total += x.price*x.quantity;
+            })
+
+            return total;
+        };
     }
 
 })();
