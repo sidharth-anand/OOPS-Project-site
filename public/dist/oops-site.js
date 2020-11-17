@@ -439,6 +439,107 @@
 
     let App = angular.module("app");
 
+    App.controller("cardRefillController", cardRefillController);
+    cardRefillController.$inject = [];
+
+    function cardRefillController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-refill.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "Grocery refill Card",
+            type: "Grocery refill",
+            refill: [],
+            frequency: "",
+            startDate: "",
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardRefillExpandedController", cardRefillExpandedController);
+    cardRefillExpandedController.$inject = ["$scope"];
+
+    function cardRefillExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.refill = $scope.cardExpandedController.data.refill;
+        ctrl.frequency = $scope.cardExpandedController.data.frequency;
+        ctrl.startDate = $scope.cardExpandedController.data.startDate;
+
+        ctrl.groceriesList = [{
+            id: 1,
+            label: "Milk"
+        },
+        {
+            id: 2,
+            label: "Eggs"
+        },
+        {
+            id: 3,
+            label: "Rice"
+        },
+        {
+            id: 4,
+            label: "Water"
+        },
+        {
+            id: 5,
+            label: "Curd"
+        }]
+
+        ctrl.selectedModel = [];
+        ctrl.searchSettings = {enableSearch: true};
+
+        
+        ctrl.frequencies = ["Once","Daily","Weekly","Monthly"]
+
+        
+
+        ctrl.addToRefiller = function(){
+            angular.forEach(ctrl.selectedModel,function(x){
+                ctrl.refill.push({
+                    item: x.label,
+                    quantity: 1
+                })
+                ctrl.selectedModel = [];
+            })
+        };
+
+        ctrl.remove = function(refillItem){
+            ctrl.refill.splice(ctrl.refill.indexOf(refillItem),1);
+
+        }
+
+        
+
+        
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardReminderController", cardReminderController);
     cardReminderController.$inject = [];
 
@@ -815,6 +916,25 @@
             controller: "cardBaseController",
             controllerAs: "cardBaseController",
             replace: true
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardRefill", cardRefill);
+    cardRefill.$inject = ["$rootScope", "$compile"];
+
+    function cardRefill($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-refill.html',
+            controller: "cardRefillController",
+            controllerAs: "cardRefillController",
+            replace: true,
         }
     }
 

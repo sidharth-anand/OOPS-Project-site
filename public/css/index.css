@@ -14236,3 +14236,11 @@ table tr a:hover{
   padding: 5px;
   margin: 2px;
 }
+
+.refillItem {
+  display: inline-block;
+  text-align: center;
+  border: 2px solid black;
+  padding: 5px;
+  margin: 2px;
+}
