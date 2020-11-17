@@ -1,17 +1,15 @@
 <div ng-controller="cardStockExpandedController as cardStockExpandedController">
     
     
-    <button type="submit" ng-click=cardStockExpandedController.addToCart()>Add to cart</button>
+    <button type="submit" ng-click=cardStockExpandedController.addToInventory()>Add to inventory</button>
     <div ng-dropdown-multiselect="" options="cardStockExpandedController.groceriesList" selected-model="cardStockExpandedController.selectedModel" extra-settings="cardStockExpandedController.searchSettings"></div>
-    <div class="cart">
-    <div class="cartItem" ng-repeat="y in cardStockExpandedController.cart">
-        <button class="x" ng-click = cardStockExpandedController.remove(y)>x</button>
-        <p>Item: {{y.item}}</p>
-        <p>Price: {{y.price}}</p>
-        <p>quantity: {{y.quantity}}</p>
-        <input type="number" min="1" class="groceryCounter" ng-model="y.quantity">
-    </div>
-    <p>Total: {{cardStockExpandedController.total()}}</p>
+    <div class="inventory">
+        <div class="inventoryItem" ng-repeat="y in cardStockExpandedController.inventory">
+            <button class="x" ng-click = cardStockExpandedController.remove(y)>x</button>
+            <p>Item: {{y.item}}</p>
+            <p>quantity: {{y.quantity}}</p>
+            <input type="number" min="1" class="groceryCounter" ng-model="y.quantity">
+        </div>
     </div>
     
 </div>

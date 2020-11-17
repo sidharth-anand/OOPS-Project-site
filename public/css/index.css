@@ -14229,7 +14229,7 @@ table tr a:hover{
   text-align: center;
 }
 
-.cartItem {
+.inventoryItem {
   display: inline-block;
   text-align: center;
   border: 2px solid black;

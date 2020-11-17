@@ -536,7 +536,7 @@
         ctrl.data = {
             name: "Grocery stock Card",
             type: "Grocery stock",
-            cart: []
+            inventory: []
         }
     }
 
@@ -552,63 +552,50 @@
     function cardStockExpandedController($scope) {
         let ctrl = this;
 
-        ctrl.cart = $scope.cardExpandedController.data.cart;
+        ctrl.inventory = $scope.cardExpandedController.data.inventory;
 
         ctrl.groceriesList = [{
             id: 1,
-            label: "Milk",
-            price: 20
+            label: "Milk"
         },
         {
             id: 2,
-            label: "Eggs",
-            price: 20
+            label: "Eggs"
         },
         {
             id: 3,
-            label: "Rice",
-            price: 50
+            label: "Rice"
         },
         {
             id: 4,
-            label: "Water",
-            price: 30
+            label: "Water"
         },
         {
             id: 5,
-            label: "Curd",
-            price: 10
+            label: "Curd"
         }]
-
-        ctrl.quantity = [];
 
         ctrl.selectedModel = [];
         ctrl.searchSettings = {enableSearch: true};
 
         
 
-        ctrl.addToCart = function(){
+        ctrl.addToInventory = function(){
             angular.forEach(ctrl.selectedModel,function(x){
-                ctrl.cart.push({
+                ctrl.inventory.push({
                     item: x.label,
-                    price: parseInt(x.price),
                     quantity: 1
                 })
+                ctrl.selectedModel = [];
             })
         };
 
-        ctrl.remove = function(cartItem){
-            ctrl.cart.splice(ctrl.cart.indexOf(cartItem),1);
+        ctrl.remove = function(inventoryItem){
+            ctrl.inventory.splice(ctrl.inventory.indexOf(inventoryItem),1);
 
         }
 
-        ctrl.total = function(){
-            let total = 0;
-            angular.forEach(ctrl.cart,function(x){
-                total += x.quantity*x.price;
-            })
-            return total;
-        }
+        
 
         
     }
