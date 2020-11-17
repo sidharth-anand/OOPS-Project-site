@@ -14237,6 +14237,10 @@ table tr a:hover{
   margin: 2px;
 }
 
+.refiller {
+  border: 2px solid black;
+}
+
 .refillItem {
   display: inline-block;
   text-align: center;

@@ -28,8 +28,7 @@
             name: "Grocery refill Card",
             type: "Grocery refill",
             refill: [],
-            frequency: "",
-            startDate: "",
+            refillFreq: {}
         }
     }
 

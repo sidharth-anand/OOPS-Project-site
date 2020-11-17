@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-17 */
+/*! oops-site 2020-11-18 */
 
 (function () {
     'use strict';
@@ -464,8 +464,7 @@
             name: "Grocery refill Card",
             type: "Grocery refill",
             refill: [],
-            frequency: "",
-            startDate: "",
+            refillFreq: {}
         }
     }
 
@@ -482,8 +481,8 @@
         let ctrl = this;
 
         ctrl.refill = $scope.cardExpandedController.data.refill;
-        ctrl.frequency = $scope.cardExpandedController.data.frequency;
-        ctrl.startDate = $scope.cardExpandedController.data.startDate;
+        ctrl.refillFreq = $scope.cardExpandedController.data.refillFreq;
+        
 
         ctrl.groceriesList = [{
             id: 1,
@@ -506,6 +505,7 @@
             label: "Curd"
         }]
 
+        
         ctrl.selectedModel = [];
         ctrl.searchSettings = {enableSearch: true};
 
@@ -527,9 +527,19 @@
         ctrl.remove = function(refillItem){
             ctrl.refill.splice(ctrl.refill.indexOf(refillItem),1);
 
-        }
+        };
 
-        
+        ctrl.frequency = "";
+        ctrl.startDate = "";
+
+        ctrl.addFreq = function(){
+            ctrl.refillFreq = {
+                frequency: ctrl.frequency,
+                startDate: ctrl.startDate
+            }
+            ctrl.frequency = "";
+            ctrl.startDate = "";
+        }
 
         
     }
