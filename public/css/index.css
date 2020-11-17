@@ -14254,4 +14254,9 @@ table tr a:hover{
 
 .card-base {
   cursor: pointer;
+  background-color: #3C3C3C;
+}
+
+.card-column {
+  background-color: #2F2F2F;
 }
