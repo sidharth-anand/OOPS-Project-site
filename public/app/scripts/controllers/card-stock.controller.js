@@ -27,8 +27,7 @@
         ctrl.data = {
             name: "Grocery stock Card",
             type: "Grocery stock",
-            cart: [],
-            inventory: []
+            cart: []
         }
     }
 

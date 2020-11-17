@@ -536,8 +536,7 @@
         ctrl.data = {
             name: "Grocery stock Card",
             type: "Grocery stock",
-            cart: [],
-            inventory: []
+            cart: []
         }
     }
 
@@ -554,8 +553,6 @@
         let ctrl = this;
 
         ctrl.cart = $scope.cardExpandedController.data.cart;
-
-        ctrl.inventory = $scope.cardExpandedController.data.inventory;
 
         ctrl.groceriesList = [{
             id: 1,
@@ -583,11 +580,11 @@
             price: 10
         }]
 
+        ctrl.quantity = [];
 
         ctrl.selectedModel = [];
-        ctrl.searchSettings = { scrollableHeight: '15rem', scrollable: true , enableSearch: true};
-        
-        ctrl.purchaseStatus = "";
+        ctrl.searchSettings = {enableSearch: true};
+
         
 
         ctrl.addToCart = function(){
@@ -597,8 +594,6 @@
                     price: parseInt(x.price),
                     quantity: 1
                 })
-                ctrl.purchaseStatus = "";
-                ctrl.selectedModel = [];
             })
         };
 
@@ -613,14 +608,6 @@
                 total += x.quantity*x.price;
             })
             return total;
-        }
-
-        
-
-        ctrl.addToInventory = function(){
-            ctrl.inventory = ctrl.cart;
-            ctrl.cart = []
-            ctrl.purchaseStatus = "Added to Inventory"
         }
 
         
