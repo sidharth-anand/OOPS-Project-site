@@ -1181,6 +1181,32 @@ fieldset[disabled] .all-wrapper a.fc-button,
   background-color: #f8f9fa;
   border-color: #f8f9fa
 }
+.btn-outline-transparent {
+  color: #f8f9fa;
+  background-image: none;
+  background-color: transparent;
+  border: none; 
+}
+.btn-outline-transparent:hover {
+  color: #f8f9fa;
+}
+.btn-outline-transparent:focus,
+.btn-outline-transparent.focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.btn-outline-transparent.disabled,
+.btn-outline-transparent:disabled {
+  color: #f8f9fa;
+  background-color: transparent
+}
+.btn-outline-transparent:active,
+.btn-outline-transparent.active,
+.show>.btn-outline-transparent.dropdown-toggle {
+  color: #222;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa
+}
 .btn-link {
     font-weight: 400;
     color: #3b75e3;
@@ -5394,7 +5420,7 @@ a.list-group-item:focus {
 #page-container {
   margin: 0 auto;
   width: 100%;
-  padding-bottom:2.5rem;
+  padding-bottom:0;
   padding-top:0;
   min-width: 320px;
    -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.1);
@@ -5650,6 +5676,10 @@ a.list-group-item:focus {
 #main-container,
 #page-footer {
   overflow-x: hidden;
+}
+
+#page-footer {
+  background-color: #222222;
 }
 
 #main-container { 
