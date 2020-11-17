@@ -9,7 +9,9 @@
         <p>Item: {{y.item}}</p>
         <p>Price: {{y.price}}</p>
         <p>quantity: {{y.quantity}}</p>
+        <input type="number" min="1" class="groceryCounter" ng-model="y.quantity">
     </div>
+    <p>Total: {{cardStockExpandedController.total()}}</p>
     </div>
     
 </div>

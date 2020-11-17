@@ -59,6 +59,14 @@
 
         }
 
+        ctrl.total = function(){
+            let total = 0;
+            angular.forEach(ctrl.cart,function(x){
+                total += x.quantity*x.price;
+            })
+            return total;
+        }
+
         
     }
 
