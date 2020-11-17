@@ -1,27 +1,15 @@
 <div ng-controller="cardStockExpandedController as cardStockExpandedController">
-    <p contenteditable="true" ng-contenteditable ng-model="cardStockExpandedController.data.text"></p>
-    <form>
-        <input type="text" ng-model="searchText" placeholder="Search">
-    </form>
     
-    <div class="groceries">
-    <div class="grocery" ng-repeat="x in cardStockExpandedController.groceriesList | filter: searchText">
-        <p>Item: {{x.item}}</p>
-        <p>Price: {{x.price}}</p>
-        <p>Quantity: <input class="groceryCounter" type="number" ng-model=cardStockExpandedController.quantity[cardStockExpandedController.groceriesList.indexOf(x)]>
-        <button type="submit" ng-click="cardStockExpandedController.addToCart(x.item,x.price,cardStockExpandedController.groceriesList.indexOf(x))">Add to cart</button></p>  
-    </div>
     
-    </div>
-
+    <button type="submit" ng-click=cardStockExpandedController.addToCart()>Add to cart</button>
+    <div ng-dropdown-multiselect="" options="cardStockExpandedController.groceriesList" selected-model="cardStockExpandedController.selectedModel" extra-settings="cardStockExpandedController.searchSettings"></div>
     <div class="cart">
-        <div class="cartItem" ng-repeat="y in cardStockExpandedController.cart">
-            <p>Item: {{y.item}}</p>
-            <p>Price: {{y.price}}</p>
-            <p>Quantity: {{y.quantity}}</p>
-
-        </div>
-        <p>Total: {{cardStockExpandedController.total()}}</p>
-
+    <div class="cartItem" ng-repeat="y in cardStockExpandedController.cart">
+        <button class="x" ng-click = cardStockExpandedController.remove(y)>x</button>
+        <p>Item: {{y.item}}</p>
+        <p>Price: {{y.price}}</p>
+        <p>quantity: {{y.quantity}}</p>
     </div>
+    </div>
+    
 </div>

@@ -14,7 +14,8 @@
         'ngAnimate',
         'ngMessages',
         'ngFileUpload',
-        'ui.bootstrap.contextMenu'
+        'ui.bootstrap.contextMenu',
+        'angularjs-dropdown-multiselect'
     ]);
 
     // // Router configuration
@@ -554,45 +555,54 @@
         ctrl.cart = $scope.cardExpandedController.data.cart;
 
         ctrl.groceriesList = [{
-            item: "Milk",
-            price: "20"
+            id: 1,
+            label: "Milk",
+            price: 20
         },
         {
-            item: "Eggs",
-            price: "40"
+            id: 2,
+            label: "Eggs",
+            price: 20
         },
         {
-            item: "Rice",
-            price: "30" 
+            id: 3,
+            label: "Rice",
+            price: 50
         },
         {
-            item: "Water",
-            price: "25" 
+            id: 4,
+            label: "Water",
+            price: 30
         },
         {
-            item: "Curd",
-            price: "90"
+            id: 5,
+            label: "Curd",
+            price: 10
         }]
 
         ctrl.quantity = [];
 
-        ctrl.addToCart = function(item,price,index) {
-            
-         ctrl.cart.push({
-                item: item,
-                price: parseInt(price),
-                quantity: parseInt(ctrl.quantity[index])
-         })   
-        };
+        ctrl.selectedModel = [];
+        ctrl.searchSettings = {enableSearch: true};
 
-        ctrl.total = function() {
-            let total = 0;
-            angular.forEach(ctrl.cart,function(x){
-                total += x.price*x.quantity;
+        
+
+        ctrl.addToCart = function(){
+            angular.forEach(ctrl.selectedModel,function(x){
+                ctrl.cart.push({
+                    item: x.label,
+                    price: parseInt(x.price),
+                    quantity: 1
+                })
             })
-
-            return total;
         };
+
+        ctrl.remove = function(cartItem){
+            ctrl.cart.splice(ctrl.cart.indexOf(cartItem),1);
+
+        }
+
+        
     }
 
 })();;

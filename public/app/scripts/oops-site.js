@@ -13,7 +13,8 @@
         'ngAnimate',
         'ngMessages',
         'ngFileUpload',
-        'ui.bootstrap.contextMenu'
+        'ui.bootstrap.contextMenu',
+        'angularjs-dropdown-multiselect'
     ]);
 
     // // Router configuration
