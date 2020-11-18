@@ -1,0 +1,25 @@
+<div ng-controller="cardRefillExpandedController as cardRefillExpandedController">
+    <button type="submit" ng-click=cardRefillExpandedController.addToRefiller()>Add for refilling</button>
+    <div ng-dropdown-multiselect="" options="cardRefillExpandedController.groceriesList" selected-model="cardRefillExpandedController.selectedModel" extra-settings="cardRefillExpandedController.searchSettings"></div>
+    <div class="refiller">
+        <p ng-show="show">Refill {{cardRefillExpandedController.refillFreq.frequency}} starting from {{cardRefillExpandedController.refillFreq.startDate | date: 'MM/dd/yyyy'}} </p>
+        <div class="refillItem" ng-repeat="y in cardRefillExpandedController.refill">
+            <button class="x" ng-click = cardRefillExpandedController.remove(y)>x</button>
+            <p>Item: {{y.item}}</p>
+            <p>quantity: {{y.quantity}}</p>
+            <p><input type="number" min="1" class="groceryCounter" ng-model="y.quantity"></p>
+            
+        </div>
+        <form ng-submit= cardRefillExpandedController.addFreq()>
+            <button type="submit" ng-click="show=true">Add frequency</button><br>
+            <label>Start Date</label><br>
+            <input type="date" ng-model="cardRefillExpandedController.startDate"><br>
+            <label>Frequency</label><br>
+            <select ng-model="cardRefillExpandedController.frequency" ng-options="x for x in cardRefillExpandedController.frequencies">
+                
+        </form>
+    </div>
+
+    
+    
+</div>
