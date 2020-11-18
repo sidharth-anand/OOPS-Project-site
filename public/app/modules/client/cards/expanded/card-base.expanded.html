@@ -3,19 +3,19 @@
         <span ng-hide="cardExpandedController.editingTitle">
             <h4 class="d-inline"  ng-click="cardExpandedController.toggleTitleEdit()">{{cardExpandedController.data.name}}</h4>
             <span class="small"> in list </span>
-            <h6 class="d-inline">Card Types</h6>
+            <h6 class="d-inline">{{cardExpandedController.group.name}}</h6>
         </span>
         <form class="" ng-show="cardExpandedController.editingTitle" ng-submit="cardExpandedController.toggleTitleEdit()">
             <div class="form-group mb-0">
-                <input id="modal-name-input" class="form-control mx-2" type="text" ng-model="cardExpandedController.data.name" ng-blur="cardExpandedController.toggleTitleEdit()" autofocus="true">
+                <input id="modal-name-input" class="form-control form-control-sm mx-2" type="text" ng-model="cardExpandedController.data.name" ng-blur="cardExpandedController.toggleTitleEdit()" autofocus="true">
             </div>
         </form>
-        <button class="btn btn-danger btn-outline btn-sm" ng-click="cardExpandedController.close()"><i class="fas fa-times"></i></button>
+        <button class="btn btn-outline-danger btn-transparent btn-transparent-danger btn-sm" ng-click="cardExpandedController.close()"><i class="fas fa-times"></i></button>
     </div>
 </div>
 <div class="modal-body">
     <ng-include src="cardExpandedController.options.expandedSrc"></ng-include>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-success btn-md" ng-click="cardExpandedController.save()">Save</button>
+    <button class="btn btn-outline-success btn-transparent btn-transparent-success" ng-click="cardExpandedController.save()">Save</button>
 </div>

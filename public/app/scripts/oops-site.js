@@ -14,20 +14,60 @@
         'ngMessages',
         'ngFileUpload',
         'ui.bootstrap.contextMenu',
+        'angular-jwt',
+        'otpInputDirective',
         'angularjs-dropdown-multiselect'
     ]);
 
     // // Router configuration
     App.config(configuration);
-    configuration.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$provide'];
+    configuration.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$provide', '$localStorageProvider'];
 
-    function configuration($stateProvider, $urlRouterProvider, $locationProvider, $provide) {
+    function configuration($stateProvider, $urlRouterProvider, $locationProvider, $provide, $localStorageProvider) {
         $urlRouterProvider.otherwise('home');
 
         $stateProvider
             .state('home', {
                 url: '/home',
-                templateUrl: 'app/modules/client/home.html'
+                templateUrl: 'app/modules/client/home.html',
+                controller: "homeController",
+                controllerAs: "homeController"
+            })
+            .state('verify-phone', {
+                url: '/verify-phone',
+                templateUrl: 'app/modules/client/verify-phone.html',
+                controller: "phoneVerifyController",
+                controllerAs: "phoneVerifyController",
+                data: {
+                    unAuth: true
+                }
+            })
+            .state('login', {
+                url: '/login',
+                templateUrl: 'app/modules/client/login.html',
+                controller: "loginController",
+                controllerAs: "loginController",
+                data: {
+                    unAuth: true
+                }
+            })
+            .state('register', {
+                url: '/register',
+                templateUrl: 'app/modules/client/register.html',
+                controller: "registerController",
+                controllerAs: "registerController",
+                data: {
+                    unAuth: true
+                }
+            })
+            .state('verify-email', {
+                url: '/verify-email',
+                templateUrl: 'app/modules/client/verify-email.html',
+                controller: "verifyEmailController",
+                controllerAs: "verifyEmailController",
+                data: {
+                    unAuth: true
+                }
             });
     }
 
@@ -310,8 +350,124 @@
 (function(){
     'use strict';
 
-    angular.element(document).ready(() =>{
+    angular.module("app").constant("AuthEvents",{
+        loginSuccess: "event:auth-login-success",
+        loginFailed: "event:auth-login-falied",
+        loginRequired: "event:auth-login-required",
+        tokenExpired: "event:auth-token-expired"
+    });
+
+})();
+
+(function(){
+    'use strict';
+
+    angular.module("app").factory("Auth", Auth);
+    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper"];
+
+    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper) {
+        let userDetails = {};
+        let userLoggedIn = false;
+
+        return {
+            login: function(creds) {
+                let req = $http.post("/login", creds);
+                req.then(d => {
+                    $localStorage.authToken = d.data.authToken;
+                    $localStorage.refreshToken = d.data.refreshToken;
+
+                    userDetails = jwtHelper.decodeToken(d.data.authToken);
+                    userLoggedIn = true;
+
+                    $rootScope.$broadcast(AuthEvents.loginSuccess);
+                }).catch(d => {
+                    $rootScope.$broadcast(AuthEvents.loginFailed);
+                });
+                return req;
+            },
+            checkPreviousLogin: function() {
+                let logged =  $localStorage.authToken && $localStorage.refreshToken && !this.isTokenExpired();
+                
+                if(logged) {
+                    userDetails = jwtHelper.decodeToken($localStorage.authToken);
+
+                    userDetails.phoneVerified = userDetails.phoneVerified === "true";
+                    userDetails.emailVerified = userDetails.emailVerified === "true";
+                    
+                    userLoggedIn = true;
+                }
+
+                return logged;
+            },
+            isLoggedIn: function() {
+                return userLoggedIn;
+            },
+            getUserDetails: function() {
+                return userDetails;
+            },
+            isTokenExpired: function() {
+                if(!$localStorage.authToken) {
+                    return true;
+                }
+
+                let expiration = jwtHelper.getTokenExpirationDate($localStorage.authToken);
+                return !(!expiration || (expiration < Date.now()));
+            },
+            isUserVerified: function() {
+                return userLoggedIn && !!userDetails.phoneVerified && !!userDetails.emailVerified;
+            },
+            getRedirectStage: function() {
+                if(!userLoggedIn) {
+                    return 'login';
+                } else if(!userDetails.phoneVerified) {
+                    return 'verify-phone';
+                } else if(!userDetails.emailVerified) {
+                    return 'verify-email';
+                }
+            }
+        }
+    }
+
+})();
+
+(function(){
+    'use strict';
+
+    angular.element(document).ready(() => {
+        
+        angular.module("app").run(runApp);
+        runApp.$inject = ["$rootScope", "Auth", "$transitions"];
+
+        function runApp($rootScope, Auth, $transitions) {
+            Auth.checkPreviousLogin();
+            $rootScope.Auth = Auth;
+
+            $transitions.onBefore({}, transition => {
+                if(Auth.isUserVerified() && transition.to().data && transition.to().data.unAuth) {
+                    return transition.router.stateService.target('home');
+                }
+
+                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                    return transition.router.stateService.target(Auth.getRedirectStage());
+                }
+
+                if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
+                    return transition.router.stateService.target('login');
+                }
+
+                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
+                    return transition.router.stateService.target('verify-email');
+                }
+
+                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                    return transition.router.stateService.target('home');
+                }
+            });
+
+        }
+
         angular.bootstrap(document, ['app']);
+
         document.documentElement.scrollTop = 0;
     });
 })();

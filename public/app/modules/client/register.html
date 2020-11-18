@@ -1,0 +1,57 @@
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-md-4 mx-auto my-auto">
+            <h3 class="text-center mb-5">Sign Up for AppName</h3>
+            <form class="pt-2 mx-auto">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="nameinput">Name</label>
+                        <input type="text" class="form-control" id="nameinput" placeholder="John Doe">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="usernameinput">Username</label>
+                        <input type="text" class="form-control" id="usernameinput" placeholder="john_doe_1743">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="emailinput">Email</label>
+                        <input type="email" class="form-control" id="emailinput" placeholder="johndoe@email.com">
+                        <small class="form-text text-muted">We'll never share your email address with anyone else</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="phoneinput">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneinput" placeholder="+91 1234567890">
+                        <small class="form-text text-muted">We'll never share your phone number with anyone else</small>
+                      </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="pwinput">Password</label>
+                        <input type="password" class="form-control" id="pwinput" placeholder="">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="pwrinput">Password Repeat</label>
+                        <input type="password" class="form-control" id="pwrinput" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="occinput">Occupation</label>
+                        <select class="custom-select">
+                            <option value="student">Student</option>
+                            <option value="employed">Employed</option>
+                            <option value="jobsearch">Job Seeker</option>
+                            <option value="homemaker">Home Maker</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-white">Sign Up</label>
+                        <button type="submit" class="btn btn-outline-success btn-block">Sign Up</button>
+                    </div>
+                </div>
+            </form>
+            <p class="form-text text-muted mt-2">Already a member? <a ui-sref="login">Sign In</a></p>
+        </div>
+    </div>
+</div>

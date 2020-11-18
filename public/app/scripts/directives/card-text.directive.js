@@ -9,6 +9,10 @@
     function cardText($rootScope, $compile) {
         return {
             restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
             templateUrl: 'app/modules/client/cards/normal/card-text.html',
             controller: "cardTextController",
             controllerAs: "cardTextController",
