@@ -1,15 +1,20 @@
 <div ng-controller="cardMeetingExpandedController as cardMeetingExpandedController">
-    <form ng-submit="cardMeetingExpandedController.addMeeting()">
-        <label>Date:</label><br>
-        <input type="date" ng-model="cardMeetingExpandedController.date"><br>
-        <label>Time</label><br>
-        <input type="time" ng-model="cardMeetingExpandedController.time"><br>
-        <label>Documents to Carry</label><br>
-        <input type="text" ng-model="cardMeetingExpandedController.document">
-        <button type="submit">Add meeting</button>
-    </form>
-    
-    <p>Date: {{cardMeetingExpandedController.meeting.date | date: 'MM/dd/yyyy'}}</p>
-    <p>Time: {{cardMeetingExpandedController.meeting.time | date: 'HH:mm:ss'}}</p>
-    <p>Documents: {{cardMeetingExpandedController.meeting.document}}</p>
+    <div class="meetingForm" ng-show="cardMeetingExpandedController.showMeeting==false">
+        <form ng-submit="cardMeetingExpandedController.addMeeting() ; cardMeetingExpandedController.showMeeting=true">
+            <label>Date:</label><br>
+            <input type="date" ng-model="cardMeetingExpandedController.date"><br>
+            <label>Time</label><br>
+            <input type="time" ng-model="cardMeetingExpandedController.time"><br>
+            <label>Documents to Carry</label><br>
+            <input type="text" ng-model="cardMeetingExpandedController.document"><br>
+            <button type="submit">Add meeting</button>
+            <button type="button" ng-click="cardMeetingExpandedController.cancelInput()" ng-disabled="">cancel</button>
+        </form>
+    </div>
+    <div class="meeting" ng-show="cardMeetingExpandedController.showMeeting==true">
+        <p>Date: {{cardMeetingExpandedController.meeting.date | date: 'MM/dd/yyyy'}}</p>
+        <p>Time: {{cardMeetingExpandedController.meeting.time | date: 'HH:mm:ss'}}</p>
+        <p>Documents: {{cardMeetingExpandedController.meeting.document}}</p>
+        <button type="submit" ng-click="cardMeetingExpandedController.showMeeting=false">add/edit</button>
+    </div>
 </div>

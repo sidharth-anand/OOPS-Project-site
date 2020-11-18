@@ -15,6 +15,8 @@
         ctrl.time = "";
         ctrl.document = "";
 
+        ctrl.showMeeting = true;
+
         ctrl.addMeeting = function() {
             ctrl.meeting.date = ctrl.date;
             ctrl.meeting.time = ctrl.time;
@@ -22,7 +24,16 @@
             ctrl.date = "";
             ctrl.time = "";
             ctrl.document = "";
+        };
+
+        ctrl.cancelInput = function() {
+            ctrl.date = "";
+            ctrl.time = "";
+            ctrl.document = "";
+            ctrl.showMeeting = true;
         }
+
+        
     }
 
 })();
