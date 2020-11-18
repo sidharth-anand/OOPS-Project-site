@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardStockController", cardStockController);
-    cardStockController.$inject = [];
+    cardStockController.$inject = ["$scope"];
 
-    function cardStockController() {
+    function cardStockController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -24,11 +24,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "Grocery stock Card",
-            type: "Grocery stock",
-            inventory: []
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();

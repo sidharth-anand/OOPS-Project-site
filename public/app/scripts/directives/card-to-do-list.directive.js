@@ -9,6 +9,10 @@
     function cardToDoList($rootScope, $compile) {
         return {
             restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
             templateUrl: 'app/modules/client/cards/normal/card-to-do-list.html',
             controller: "cardToDoListController",
             controllerAs: "cardToDoListController",

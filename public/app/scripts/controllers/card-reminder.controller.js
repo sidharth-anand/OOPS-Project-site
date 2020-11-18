@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardReminderController", cardReminderController);
-    cardReminderController.$inject = [];
+    cardReminderController.$inject = ["$scope"];
 
-    function cardReminderController() {
+    function cardReminderController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -24,11 +24,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "Reminder Card",
-            type: "Reminder",
-            reminderList: []
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();

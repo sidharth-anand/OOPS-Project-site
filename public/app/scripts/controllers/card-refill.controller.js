@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardRefillController", cardRefillController);
-    cardRefillController.$inject = [];
+    cardRefillController.$inject = ["$scope"];
 
-    function cardRefillController() {
+    function cardRefillController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -24,12 +24,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "Grocery refill Card",
-            type: "Grocery refill",
-            refill: [],
-            refillFreq: {}
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();

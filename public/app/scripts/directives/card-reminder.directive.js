@@ -9,6 +9,10 @@
     function cardReminder($rootScope, $compile) {
         return {
             restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
             templateUrl: 'app/modules/client/cards/normal/card-reminder.html',
             controller: "cardReminderController",
             controllerAs: "cardReminderController",
