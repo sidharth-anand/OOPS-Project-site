@@ -439,6 +439,68 @@
 
     let App = angular.module("app");
 
+    App.controller("cardMeetingController", cardMeetingController);
+    cardMeetingController.$inject = [];
+
+    function cardMeetingController() {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-meeting.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = {
+            name: "Meeting Card",
+            type: "Meeting",
+            meeting: {}
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardMeetingExpandedController", cardMeetingExpandedController);
+    cardMeetingExpandedController.$inject = ["$scope"];
+
+    function cardMeetingExpandedController($scope) {
+        let ctrl = this;
+
+        ctrl.meeting = $scope.cardExpandedController.data.meeting;
+
+        ctrl.date = "";
+        ctrl.time = "";
+        ctrl.document = "";
+
+        ctrl.addMeeting = function() {
+            ctrl.meeting.date = ctrl.date;
+            ctrl.meeting.time = ctrl.time;
+            ctrl.meeting.document = ctrl.document;
+            ctrl.date = "";
+            ctrl.time = "";
+            ctrl.document = "";
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardRefillController", cardRefillController);
     cardRefillController.$inject = [];
 
@@ -926,6 +988,25 @@
             controller: "cardBaseController",
             controllerAs: "cardBaseController",
             replace: true
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardMeeting", cardMeeting);
+    cardMeeting.$inject = ["$rootScope", "$compile"];
+
+    function cardMeeting($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/modules/client/cards/normal/card-meeting.html',
+            controller: "cardMeetingController",
+            controllerAs: "cardMeetingController",
+            replace: true,
         }
     }
 
