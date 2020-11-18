@@ -31,7 +31,7 @@
                 });
 
                 function read() {
-                    let html = element.html();
+                    let html = element.text();
                     if(attrs.stripBr && html == '<br>') {
                         html = '';
                     }

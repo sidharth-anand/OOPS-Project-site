@@ -11,5 +11,11 @@
 
         ctrl.data = $scope.groupData;
         ctrl.groupInfo = {name: ctrl.data.name};
+
+        $scope.$watch(function() {
+            return ctrl.data.name;
+        }, function(newName) {
+            ctrl.groupInfo.name = newName;
+        })
     }
 })();

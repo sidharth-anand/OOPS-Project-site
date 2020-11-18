@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-16 */
+/*! oops-site 2020-11-18 */
 
 (function () {
     'use strict';
@@ -605,6 +605,12 @@
 
         ctrl.data = $scope.groupData;
         ctrl.groupInfo = {name: ctrl.data.name};
+
+        $scope.$watch(function() {
+            return ctrl.data.name;
+        }, function(newName) {
+            ctrl.groupInfo.name = newName;
+        })
     }
 })();;
 (function(){
@@ -953,7 +959,7 @@
                 });
 
                 function read() {
-                    let html = element.html();
+                    let html = element.text();
                     if(attrs.stripBr && html == '<br>') {
                         html = '';
                     }
