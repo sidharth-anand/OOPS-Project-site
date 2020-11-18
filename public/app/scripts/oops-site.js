@@ -16,6 +16,7 @@
         'ui.bootstrap.contextMenu',
         'angular-jwt',
         'otpInputDirective',
+        'angularjs-dropdown-multiselect'
     ]);
 
     // // Router configuration
