@@ -3,6 +3,11 @@
     <div ng-repeat="card in cardGroupController.data.cards">
         <div ng-switch="card.type">
             <card-text ng-switch-when="Text" data="card" group="cardGroupController.groupInfo"></card-text>
+            <card-reminder ng-switch-when="Reminder" data="card" group="cardGroupController.groupInfo"></card-reminder>
+            <card-to-do-list ng-switch-when="To-do list" data="card" group="cardGroupController.groupInfo"></card-to-do-list>
+            <card-meeting ng-switch-when="Meeting" data="card" group="cardGroupController.groupInfo"></card-meeting>
+            <card-stock ng-switch-when="Grocery stock" data="card" group="cardGroupController.groupInfo"></card-stock>
+            <card-refill ng-switch-when="Grocery refill" data="card" group="cardGroupController.groupInfo"></card-refill>
         </div>
     </div>
 </div>

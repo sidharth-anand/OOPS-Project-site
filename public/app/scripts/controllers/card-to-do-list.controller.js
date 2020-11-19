@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardToDoListController", cardToDoListController);
-    cardToDoListController.$inject = [];
+    cardToDoListController.$inject = ["$scope"];
 
-    function cardToDoListController() {
+    function cardToDoListController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -24,12 +24,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "To do List card",
-            type: "To-do list",
-            list:  [],
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();

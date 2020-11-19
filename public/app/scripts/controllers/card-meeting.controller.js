@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardMeetingController", cardMeetingController);
-    cardMeetingController.$inject = [];
+    cardMeetingController.$inject = ["$scope"];
 
-    function cardMeetingController() {
+    function cardMeetingController($scope) {
         let ctrl = this;
 
         ctrl.options = {
@@ -24,11 +24,8 @@
             }
         }
 
-        ctrl.data = {
-            name: "Meeting Card",
-            type: "Meeting",
-            meeting: {}
-        }
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
     }
 
 })();
