@@ -1,6 +1,7 @@
 <div class="col-md-2 card-column my-3 pt-2 pb-3 px-0 mx-2">
     <h3 class="ml-2 mb-3" contenteditable="true" ng-contenteditable ng-model="cardGroupController.data.name"></h3>
-    <div ng-repeat="card in cardGroupController.data.cards">
+    <ul dnd-list="cardGroupController.data.cards">
+    <li ng-repeat="card in cardGroupController.data.cards" dnd-draggable="card" dnd-moved="cardGroupController.data.cards.splice($index, 1)" dnd-effect-allowed="move">
         <div ng-switch="card.type">
             <card-text ng-switch-when="Text" data="card" group="cardGroupController.groupInfo"></card-text>
             <card-reminder ng-switch-when="Reminder" data="card" group="cardGroupController.groupInfo"></card-reminder>
@@ -9,5 +10,6 @@
             <card-stock ng-switch-when="Grocery stock" data="card" group="cardGroupController.groupInfo"></card-stock>
             <card-refill ng-switch-when="Grocery refill" data="card" group="cardGroupController.groupInfo"></card-refill>
         </div>
-    </div>
+    </li>
+    </ul>
 </div>
