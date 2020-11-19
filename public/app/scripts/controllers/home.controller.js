@@ -9,6 +9,8 @@
     function homeController($rootScope) {
         let ctrl = this;
 
+        //Once server auth is integrated this should become ctrl.cardGroups = cardGroupService.getAllGroups();
+
         ctrl.cardGroups = [
             {
                 name: "Cards 1",

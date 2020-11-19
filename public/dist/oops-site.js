@@ -478,6 +478,47 @@
 
     let App = angular.module("app");
 
+    App.service("baseAPIService", baseAPIService);
+    baseAPIService.$inject = ["$http", "$rootScope"];
+
+    function baseAPIService($http, $rootScope) {
+        return {
+            call: function(method, url, params) {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAuthToken();
+            
+                return $http({
+                    method: method,
+                    url: serverPath + url,
+                    params: method == 'GET' ? params : {},
+                    data: method != 'GET' ? params : {},
+                });
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("cardGroupService", cardGroupService);
+    cardGroupService.$inject = ["baseAPIService"];
+
+    function cardGroupService(baseAPIService) {
+        return {
+            getAllGroups: function() {
+                return baseAPIService.call('GET', '/cards/all', {})
+            }
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardBaseController", cardBaseController);
     cardBaseController.$inject = ["$scope", "$uibModal"];
 
@@ -1115,6 +1156,8 @@
 
     function homeController($rootScope) {
         let ctrl = this;
+
+        //Once server auth is integrated this should become ctrl.cardGroups = cardGroupService.getAllGroups();
 
         ctrl.cardGroups = [
             {
