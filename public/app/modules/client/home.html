@@ -1,5 +1,9 @@
 <section class="container-fluid h-100">
     <div class="row h-100 px-3 align-items-baseline">
-        <card-group ng-repeat="group in homeController.cardGroups" data="group"></card-group>
+        <ul dnd-list="homeController.cardGroups" dnd-allowed-types="['group']" dnd-external-sources="true">
+        <li ng-repeat="group in homeController.cardGroups" dnd-draggable="group" dnd-type="'group'" dnd-moved="homeController.cardGroups.splice($index,1)" dnd-effect-allowed="move">
+        <card-group data="group"></card-group>
+        </li>
+        </ul>
     </div>
 </section>
