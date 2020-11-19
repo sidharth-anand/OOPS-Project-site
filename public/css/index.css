@@ -418,7 +418,7 @@ button.text-danger-light:focus {
   opacity: .75;
 }
 .text-white {
-  color: #fff !important;
+  color: #f2f2f2 !important;
 }
 a.text-white:hover,
 a.text-white:active,
@@ -14331,6 +14331,35 @@ table tr a:hover{
 
 .card-column {
   background-color: #2F2F2F;
+}
+
+.dndPlaceholder.card-column-placeholder {
+  background-color: #2f2f2f;
+  min-width:16.66%;
+  opacity:0;
+}
+
+.card-column .dndPlaceholder {
+  background-color: #3C3C3C;
+  min-height:55px;
+  padding-left: 0.25rem;
+  padding-right:0.25rem;
+  margin-left:0.5rem;
+  margin-right:0.5rem;
+  margin-top:0.5rem;
+  list-style: none;
+}
+
+.dndDragging.dndDraggingSource[dnd-draggable="card"]  {
+  display:none;
+}
+
+.dndDragging.dndDraggingSource[dnd-draggable="group"] {
+  display:none;
+}
+
+.card-column-list[dnd-list] {
+  min-height:50px;
 }
 
 .strike {
