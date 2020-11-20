@@ -14374,13 +14374,14 @@ table tr a:hover{
   min-height:50px;
 }
 
-.strike {
-  text-decoration: line-through;
-}
-
 .uib-time > input.form-control {
   font-size:0.875rem;
   height:calc(1.5em + .5rem + 2px);
+}
+
+.task-completed {
+  color:#999999;
+  text-decoration: line-through;
 }
 
 .groceries {

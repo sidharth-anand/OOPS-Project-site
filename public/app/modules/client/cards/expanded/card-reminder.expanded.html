@@ -27,7 +27,7 @@
         </div>
     </form>
 
-    <h4 class="mb-3">Your Reminders</h4>
+    <h4 class="mb-3">Reminders</h4>
     <div ng-repeat="x in cardReminderExpandedController.reminderList">
         <div class="reminder mb-3">
             <div ng-hide="editing" ng-click="editing=true" class="text-light mt-1 mb-1 h5 ml-2">{{$index + 1}}: Reminder on: <b>{{x.date | date: 'MM-dd-yyyy'}}</b> at <b>{{x.time | date: 'HH:mm'}}</b></div>
