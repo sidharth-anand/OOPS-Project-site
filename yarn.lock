@@ -226,7 +226,16 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-bootstrap@^4.5.3:
+bootstrap-input-spinner@^1.16.8:
+  version "1.16.8"
+  resolved "https://registry.yarnpkg.com/bootstrap-input-spinner/-/bootstrap-input-spinner-1.16.8.tgz#397c61b0e0c803d9e5ca16196e3fa91251443b1a"
+  integrity sha512-7VFHIwrWeSyNg+bHy3cpc4Pir1+nfhTeM47GhbgdLSmCI+xtn4cmccums/IPk3YBRv/zz5heFG1u9U7jT8DuUQ==
+  dependencies:
+    bootstrap "^4.5.2"
+    jquery "^3.5.1"
+    popper.js "^1.16.1"
+
+bootstrap@^4.5.2, bootstrap@^4.5.3:
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.3.tgz#c6a72b355aaf323920be800246a6e4ef30997fe6"
   integrity sha512-o9ppKQioXGqhw8Z7mah6KdTYpNQY//tipnkxppWhPbiSWdD+1raYsnhwEZjkTHYbGee4cVQ0Rx65EhOY/HNLcQ==

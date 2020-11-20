@@ -745,13 +745,16 @@ a.bg-gray-lighter:focus {
     font-size: 14px;
     border-radius: 0;
     -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out
+    transition: all 0.2s ease-in-out;
+    color:#f2f2f2;
 }
 .btn:focus,
 .all-wrapper .fc-button:focus,
 .btn:hover,
 .all-wrapper .fc-button:hover {
-    text-decoration: none
+    text-decoration: none;
+    border-color: #f2f2f2;
+    color: #f2f2f2;
 }
 .btn:focus,
 .all-wrapper .fc-button:focus,
@@ -1218,7 +1221,7 @@ fieldset[disabled] .all-wrapper a.fc-button,
   box-shadow: none !important;
 }
 .btn-transparent:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   background:transparent;
 }
 .btn-transparent:focus {
@@ -14383,6 +14386,43 @@ table tr a:hover{
   color:#999999;
   text-decoration: line-through;
 }
+
+.multiselect-parent .dropdown-menu .dropdown-header .form-control.searchField {
+  font-size:0.875rem;
+  height:calc(1.5em + .5rem + 2px);
+  line-height: 1.5;
+  padding:0.25rem 0.5rem;
+  margin-bottom:0.15rem;
+}
+
+.multiselect-parent .dropdown-menu > li > a.option {
+  display:inline-block;
+  width:100%;
+  padding-top:0;
+  padding-bottom: 0;
+  cursor:pointer;
+  color:#f2f2f2;
+}
+
+.multiselect-parent .dropdown-menu > li > a.option:hover {
+  background-color: #f2f2f2;
+  color:#2f2f2f;
+}
+
+.multiselect-parent .dropdown-menu > li.active > a.option {
+  background-color:#f2f2f2;
+  color:#2f2f2f;
+}
+
+.custom-number-input .input-group-prepend .btn, .custom-number-input .input-group-append .btn {
+  border:none;
+}
+
+.custom-number-input .input-group-prepend .btn:hover, .custom-number-input .input-group-append .btn:hover {
+  background:transparent;
+  color: #f2f2f2;
+}
+
 
 .groceries {
   overflow-y: scroll;

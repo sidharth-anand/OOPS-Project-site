@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-20 */
+/*! oops-site 2020-11-21 */
 
 (function () {
     'use strict';
@@ -919,7 +919,17 @@
         }]
 
         ctrl.selectedModel = [];
-        ctrl.searchSettings = {enableSearch: true};
+        ctrl.searchSettings = {
+            enableSearch: true,
+            showCheckAll: false,
+            showUncheckAll: false,
+            dynamicTitle: false,
+            styleActive: true,
+            buttonClasses: "btn-outline-light btn-transparent btn-transparent-light px-0"
+        };
+        ctrl.selectTexts = {
+            buttonDefaultText: "Add/Remove items to card"
+        }
 
         
 
@@ -1507,6 +1517,25 @@
                     }
                     ngModel.$setViewValue(html);
                 }
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("ngNumberInput", ngNumberInput);
+    ngNumberInput.$inject = ["$rootScope", "$compile"];
+
+    function ngNumberInput() {
+        return {
+            restrict: 'A',
+            replace: false,
+            link: function(scope, element, attrs) {
+                angular.element(element).inputSpinner();
             }
         }
     }

@@ -1,15 +1,22 @@
 <div ng-controller="cardStockExpandedController as cardStockExpandedController">
-    
-    
-    <button type="submit" ng-click=cardStockExpandedController.addToInventory()>Add to inventory</button>
-    <div ng-dropdown-multiselect="" options="cardStockExpandedController.groceriesList" selected-model="cardStockExpandedController.selectedModel" extra-settings="cardStockExpandedController.searchSettings"></div>
-    <div class="inventory">
-        <div class="inventoryItem" ng-repeat="y in cardStockExpandedController.inventory">
-            <button class="x" ng-click = cardStockExpandedController.remove(y)>x</button>
-            <p>Item: {{y.item}}</p>
-            <p>quantity: {{y.quantity}}</p>
-            <input type="number" min="1" class="groceryCounter" ng-model="y.quantity">
+
+    <h4 class="text-light">Items in Stock</h4>
+    <div class="inventory mb-5 mt-3">
+        <div class="row align-items-center mb-1" ng-repeat="y in cardStockExpandedController.inventory">
+            <div class="col-md-1 offset-1">
+                <h5 class="text-light">{{y.label}}</h5>
+            </div>
+            <div class="col-md-4 custom-number-input">
+                <input type="number" min="1" class="mr-0 form-control-sm" ng-model="y.quantity" ng-number-input id="quant{{$index}}" placeholder="0">
+            </div>
+            <div class="col-md-4 offset-2">
+                <button class="btn btn-outline-danger btn-transparent btn-transparent-danger btn-block text-right" ng-click = cardStockExpandedController.remove(y)>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
     </div>
-    
+
+    <div ng-dropdown-multiselect="" translation-texts="cardStockExpandedController.selectTexts" options="cardStockExpandedController.groceriesList" selected-model="cardStockExpandedController.inventory" extra-settings="cardStockExpandedController.searchSettings"></div>
+
 </div>
