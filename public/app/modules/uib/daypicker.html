@@ -22,7 +22,7 @@
               'btn-info' for selectedDt,
               'active' for activeDt
               on dt" ng-click="select(dt.date)" ng-disabled="::dt.disabled" tabindex="-1"><span
-                        ng-class="::{'text-light': dt.secondary, 'text-info': dt.current, 'text-muted': (!dt.secondary && !dt.current)}">{{::dt.label}}</span></button>
+                        ng-class="::{'text-muted': dt.secondary, 'text-info': dt.current, 'text-light': (!dt.secondary && !dt.current)}">{{::dt.label}}</span></button>
             </td>
         </tr>
     </tbody>
