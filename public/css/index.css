@@ -958,15 +958,15 @@ fieldset[disabled] .all-wrapper a.fc-button,
     border-color: #db2020
 }
 .btn-outline-primary {
-    color: #047bf8;
+    color: #49ADD1;
     background-image: none;
     background-color: transparent;
-    border-color: #047bf8
+    border-color: #49ADD1
 }
 .btn-outline-primary:hover {
-    color: #fff;
-    background-color: #047bf8;
-    border-color: #047bf8
+    color: #f2f2f2;
+    background-color: #49ADD1;
+    border-color: #49ADD1
 }
 .btn-outline-primary:focus,
 .btn-outline-primary.focus {
@@ -975,15 +975,15 @@ fieldset[disabled] .all-wrapper a.fc-button,
 }
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-    color: #047bf8;
+    color: #49ADD1;
     background-color: transparent
 }
 .btn-outline-primary:active,
 .btn-outline-primary.active,
 .show>.btn-outline-primary.dropdown-toggle {
-    color: #fff;
-    background-color: #047bf8;
-    border-color: #047bf8
+    color: #f2f2f2;
+    background-color: #49ADD1;
+    border-color: #49ADD1
 }
 .btn-outline-secondary {
     color: #383d4d;
@@ -1211,6 +1211,12 @@ fieldset[disabled] .all-wrapper a.fc-button,
   border:none;
   transition: transform 0.1s linear;
 }
+.btn-transparent:active {
+  background-color:transparent !important;
+}
+.btn-transparent:active:focus {
+  box-shadow: none !important;
+}
 .btn-transparent:hover {
   transform: scale(1.1);
   background:transparent;
@@ -1219,11 +1225,17 @@ fieldset[disabled] .all-wrapper a.fc-button,
   box-shadow: none;
   -webkit-box-shadow:none;
 }
-.btn-transparent-danger:hover {
-  color:#e65252;
+.btn-transparent-danger:hover, .btn-transparent-danger:active {
+  color:#e65252 !important;
 }
-.btn-transparent-success:hover {
-  color:#579D1B;
+.btn-transparent-success:hover, .btn-transparent-success:active {
+  color:#579D1B !important;
+}
+.btn-transparent-light:hover, .btn-transparent-light:active {
+  color:#f2f2f2 !important;
+}
+.btn-transparent-primary:hover, .btn-transparent-primary:active  {
+  color:#49ADD1 !important;
 }
 .btn-link {
     font-weight: 400;
@@ -14366,10 +14378,9 @@ table tr a:hover{
   text-decoration: line-through;
 }
 
-.reminder {
-  border: 1px solid black;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.uib-time > input.form-control {
+  font-size:0.875rem;
+  height:calc(1.5em + .5rem + 2px);
 }
 
 .groceries {
