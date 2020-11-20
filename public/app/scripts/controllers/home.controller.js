@@ -52,8 +52,9 @@
                     {
                         name: "Grocery refill Card",
                         type: "Grocery refill",
+                        startDate: new Date(),
                         refill: [],
-                        refillFreq: {}
+                        refillFreq: []
                     }
                 ]
             },
