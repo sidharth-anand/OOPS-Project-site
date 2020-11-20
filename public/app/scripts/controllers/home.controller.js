@@ -37,7 +37,12 @@
                     {
                         name: "Meeting Card",
                         type: "Meeting",
-                        meeting: {}
+                        meeting: {
+                            date: Date.now(),
+                            time: Date.now(),
+                            link: "https://asd.com/qwe-123-asd",
+                            documents:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                        }
                     },
                     {
                         name: "Grocery stock Card",

@@ -659,29 +659,13 @@
 
         ctrl.meeting = $scope.cardExpandedController.data.meeting;
 
-        ctrl.date = "";
-        ctrl.time = "";
-        ctrl.document = "";
-
-        ctrl.showMeeting = true;
-
-        ctrl.addMeeting = function() {
-            ctrl.meeting.date = ctrl.date;
-            ctrl.meeting.time = ctrl.time;
-            ctrl.meeting.document = ctrl.document;
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-        };
-
-        ctrl.cancelInput = function() {
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-            ctrl.showMeeting = true;
+        ctrl.datePopup = {
+            addDate: false
         }
 
-        
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
+        }
     }
 
 })();;
@@ -1148,7 +1132,12 @@
                     {
                         name: "Meeting Card",
                         type: "Meeting",
-                        meeting: {}
+                        meeting: {
+                            date: Date.now(),
+                            time: Date.now(),
+                            link: "https://asd.com/qwe-123-asd",
+                            documents:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                        }
                     },
                     {
                         name: "Grocery stock Card",

@@ -11,29 +11,13 @@
 
         ctrl.meeting = $scope.cardExpandedController.data.meeting;
 
-        ctrl.date = "";
-        ctrl.time = "";
-        ctrl.document = "";
-
-        ctrl.showMeeting = true;
-
-        ctrl.addMeeting = function() {
-            ctrl.meeting.date = ctrl.date;
-            ctrl.meeting.time = ctrl.time;
-            ctrl.meeting.document = ctrl.document;
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-        };
-
-        ctrl.cancelInput = function() {
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-            ctrl.showMeeting = true;
+        ctrl.datePopup = {
+            addDate: false
         }
 
-        
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
+        }
     }
 
 })();

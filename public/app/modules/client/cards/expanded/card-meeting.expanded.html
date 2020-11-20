@@ -1,20 +1,34 @@
 <div ng-controller="cardMeetingExpandedController as cardMeetingExpandedController">
-    <div class="meetingForm" ng-show="cardMeetingExpandedController.showMeeting==false">
-        <form ng-submit="cardMeetingExpandedController.addMeeting() ; cardMeetingExpandedController.showMeeting=true">
-            <label>Date:</label><br>
-            <input type="date" ng-model="cardMeetingExpandedController.date"><br>
-            <label>Time</label><br>
-            <input type="time" ng-model="cardMeetingExpandedController.time"><br>
-            <label>Documents to Carry</label><br>
-            <input type="text" ng-model="cardMeetingExpandedController.document"><br>
-            <button type="submit">Add meeting</button>
-            <button type="button" ng-click="cardMeetingExpandedController.cancelInput()" ng-disabled="">cancel</button>
-        </form>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" uib-datepicker-popup="dd-MMMM-yyyy"
+                        datepicker-template-url="app/modules/uib/datepicker.html" show-button-bar="false"
+                        is-open="cardMeetingExpandedController.datePopup.addDate"
+                        ng-model="cardMeetingExpandedController.meeting.date" ng-required="true">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-outline-light btn-transparent btn-transparent-light"
+                            ng-click="cardMeetingExpandedController.toggleDatePopup('addDate')">
+                            <i class="fas fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-5">
+                <div uib-timepicker ng-model="cardMeetingExpandedController.meeting.time" hour-step="1" minute-step="15"
+                    template-url="app/modules/uib/timepicker.html"></div>
+            </div>
+        </div>
+    </form>
+
+    <h5 class="text-light">URL</h5>
+    <div class="mb-4">
+        <span contenteditable="true" ng-contenteditable ng-model="cardMeetingExpandedController.meeting.link"></span>
     </div>
-    <div class="meeting" ng-show="cardMeetingExpandedController.showMeeting==true">
-        <p>Date: {{cardMeetingExpandedController.meeting.date | date: 'MM/dd/yyyy'}}</p>
-        <p>Time: {{cardMeetingExpandedController.meeting.time | date: 'HH:mm:ss'}}</p>
-        <p>Documents: {{cardMeetingExpandedController.meeting.document}}</p>
-        <button type="submit" ng-click="cardMeetingExpandedController.showMeeting=false">add/edit</button>
+
+    <h5 class="text-light">Details</h5>
+    <div>
+        <p contenteditable="false" ng-contenteditable ng-model="cardMeetingExpandedController.meeting.documents"></p>
     </div>
 </div>
