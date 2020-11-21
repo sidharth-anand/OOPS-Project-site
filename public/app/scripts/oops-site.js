@@ -369,6 +369,8 @@
     function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper) {
         let userDetails = {};
         let userLoggedIn = false;
+        let userRegistrationDetails = null;
+        const serverPath = "http://localhost:5000";
 
         return {
             login: function(creds) {
@@ -386,6 +388,21 @@
                 });
                 return req;
             },
+            register: function(details) {
+                let req = $http.post(serverPath + "/register", details);
+                req.then(d => {
+                    if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
+                        userRegistrationDetails = {
+                            name: details.name,
+                            email: details.email,
+                            phone: details.phone,
+                            emailVerified: false,
+                            phoneVerified: false
+                        };
+                    }
+                });
+                return req;
+            },
             checkPreviousLogin: function() {
                 let logged =  $localStorage.authToken && $localStorage.refreshToken && !this.isTokenExpired();
                 
@@ -399,6 +416,10 @@
                 }
 
                 return logged;
+            },
+            checkUniqueUsername: function(name) {
+                //return $http.get(serverPath + 'username', {name: name});
+                return true;
             },
             isLoggedIn: function() {
                 return userLoggedIn;

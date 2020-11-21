@@ -53,12 +53,12 @@ body {
   outline: 0 !important;
 }
 a {
-    color: #3b75e3;
+    color: #49ADD1 !important;
     text-decoration: none
 }
 a:focus,
 a:hover {
-    color: #1a50b7;
+    color: #2F94B9 !important;
     text-decoration: none;
 }
 a:not([href]):not([tabindex]) {
@@ -357,8 +357,11 @@ button.text-info:focus {
   color: #70b9eb;
   opacity: .75;
 }
+.text-dark {
+  color:#222222 !important;
+}
 .text-danger {
-  color: #d26a5c;
+  color: #d26a5c !important;
 }
 a.text-danger:hover,
 a.text-danger:active,
@@ -366,7 +369,7 @@ a.text-danger:focus,
 button.text-danger:hover,
 button.text-danger:active,
 button.text-danger:focus {
-  color: #d26a5c;
+  color: #d26a5c !important;
   opacity: .75;
 }
 .text-success-light {
@@ -1045,15 +1048,15 @@ fieldset[disabled] .all-wrapper a.fc-button,
     border-color: #5bc0de
 }
 .btn-outline-success {
-    color: #579D1B;
+    color: #49D150;
     background-image: none;
     background-color: transparent;
-    border-color: #579D1B
+    border-color: #49D150
 }
 .btn-outline-success:hover {
     color: #fff;
-    background-color: #579D1B;
-    border-color: #579D1B
+    background-color: #49D150;
+    border-color: #49D150
 }
 .btn-outline-success:focus,
 .btn-outline-success.focus {
@@ -1062,15 +1065,15 @@ fieldset[disabled] .all-wrapper a.fc-button,
 }
 .btn-outline-success.disabled,
 .btn-outline-success:disabled {
-    color: #579D1B;
+    color: #49D150;
     background-color: transparent
 }
 .btn-outline-success:active,
 .btn-outline-success.active,
 .show>.btn-outline-success.dropdown-toggle {
     color: #fff;
-    background-color: #579D1B;
-    border-color: #579D1B
+    background-color: #49D150;
+    border-color: #49D150
 }
 .btn-outline-warning {
     color: #F9F1D9;
@@ -2048,6 +2051,7 @@ a.list-group-item:focus {
 }
 .dropdown-menu > li > a:hover {
   background-color: #f2f2f2;
+  color:#2f2f2f;
 }
 .dropdown-menu > li > a i.pull-right,
 .dropdown-menu > li > a .badge.pull-right {
@@ -14423,41 +14427,6 @@ table tr a:hover{
   color: #f2f2f2;
 }
 
-
-.groceries {
-  overflow-y: scroll;
-  height: 20rem;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.groceryCounter {
-  text-align: center;
-  width: 3rem;
-  margin-right: 1rem;
-}
-
-.grocery {
-  border: 1px solid black;
-  text-align: center;
-}
-
-.inventoryItem {
-  display: inline-block;
-  text-align: center;
-  border: 2px solid black;
-  padding: 5px;
-  margin: 2px;
-}
-
-.refiller {
-  border: 2px solid black;
-}
-
-.refillItem {
-  display: inline-block;
-  text-align: center;
-  border: 2px solid black;
-  padding: 5px;
-  margin: 2px;
+.open .dropdown-menu {
+  display:block;
 }

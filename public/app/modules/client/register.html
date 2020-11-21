@@ -2,51 +2,82 @@
     <div class="row h-100">
         <div class="col-md-4 mx-auto my-auto">
             <h3 class="text-center mb-5">Sign Up for AppName</h3>
-            <form class="pt-2 mx-auto">
+            <form class="pt-2 mx-auto" name="registrationForm" novalidate ng-submit="registerController.submit(registrationForm, registrationForm.$valid)">
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.name.$error && registrationForm.$submitted && registrationForm.name.$invalid}">
                         <label for="nameinput">Name</label>
-                        <input type="text" class="form-control" id="nameinput" placeholder="John Doe">
+                        <input type="text" class="form-control" id="nameinput" placeholder="John Doe" name="name" required ng-model="registerController.registerForm.name">
+                        <div ng-messages="registrationForm.name.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.username.$error && registrationForm.$submitted && registrationForm.username.$invalid}">
                         <label for="usernameinput">Username</label>
-                        <input type="text" class="form-control" id="usernameinput" placeholder="john_doe_1743">
+                        <input type="text" class="form-control" id="usernameinput" placeholder="john_doe_1743" name="username" ng-model="registerController.registerForm.username" required ng-change="registerController.checkUniqueUsername(registrationForm)">
+                        <div ng-messages="registrationForm.username.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                            <small class="form-text text-danger" ng-message="unique">This username is already taken</small>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.email.$error && registrationForm.$submitted && registrationForm.email.$invalid}">
                         <label for="emailinput">Email</label>
-                        <input type="email" class="form-control" id="emailinput" placeholder="johndoe@email.com">
-                        <small class="form-text text-muted">We'll never share your email address with anyone else</small>
+                        <input type="email" class="form-control" id="emailinput" ng-change="registerController.removeUniqueValidation(registrationForm, 'email')" placeholder="johndoe@email.com" name="email" ng-model="registerController.registerForm.email" required>
+                        <small class="form-text text-muted" ng-hide="registrationForm.email.$invalid && registrationForm.$submitted">We'll never share your email address with anyone else</small>
+                        <div ng-messages="registrationForm.email.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                            <small class="form-text text-danger" ng-message="email">Enter a valid email address</small>
+                            <small class="form-text text-danger" ng-message="unique">This email is already assosciated with an account</small>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.phone.$error && registrationForm.$submitted && registrationForm.phone.$invalid}">
                         <label for="phoneinput">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneinput" placeholder="+91 1234567890">
-                        <small class="form-text text-muted">We'll never share your phone number with anyone else</small>
+                        <input type="tel" class="form-control" pattern="\+[0-9]{2} [0-9]{10}" id="phoneinput" placeholder="+91 1234567890" ng-change="registerController.removeUniqueValidation(registrationForm, 'phone')" name="phone" ng-model="registerController.registerForm.phone" required>
+                        <small class="form-text text-muted" ng-hide="registrationForm.phone.$invalid && registrationForm.$submitted">We'll never share your phone number with anyone else</small>
+                        <div ng-messages="registrationForm.phone.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                            <small class="form-text text-danger" ng-message="unique">This phone number is already assosciated with another account</small>
+                            <small class="form-text text-danger" ng-message="pattern">Enter a valid phone nunmber (With the country code)</small>
+                        </div>
                       </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.password.$error && registrationForm.$submitted && registrationForm.password.$invalid}">
                         <label for="pwinput">Password</label>
-                        <input type="password" class="form-control" id="pwinput" placeholder="">
+                        <input type="password" class="form-control" id="pwinput" placeholder="" name="password" ng-model="registerController.registerForm.password" required>
+                        <div ng-messages="registrationForm.password.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" ng-class="{'has-error':registrationForm.passwordrepeat.$error && registrationForm.$submitted && registrationForm.passwordrepeat.$invalid}">
                         <label for="pwrinput">Password Repeat</label>
-                        <input type="password" class="form-control" id="pwrinput" placeholder="">
+                        <input type="password" class="form-control" id="pwrinput" placeholder="" name="passwordrepeat" ng-model="registerController.registerForm.passwordrepeat" ng-change="registerController.checkPasswordMatch(registrationForm)" required> 
+                        <div ng-messages="registrationForm.passwordrepeat.$error" ng-show="registrationForm.$submitted">
+                            <small class="form-text text-danger" ng-message="required">This field is required</small>
+                            <small class="form-text text-danger" ng-message="mismatch">Passwords do not match</small>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="occinput">Occupation</label>
-                        <select class="custom-select">
-                            <option value="student">Student</option>
-                            <option value="employed">Employed</option>
-                            <option value="jobsearch">Job Seeker</option>
-                            <option value="homemaker">Home Maker</option>
-                        </select>
+                        <div id="occinput">
+                            <div class="btn-group w-100" uib-dropdown is-open="registerController.dropdownstatus.isopen" auto-close="always">
+                                <button id="single-button" type="button" class="btn btn-outline-light btn-block" uib-dropdown-toggle>
+                                  {{registerController.registerForm.occupation}} 
+                                  <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu w-100 text-center" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                    <li role="menuitem" ng-repeat="occ in registerController.occupations">
+                                        <a  class="w-100 d-inline-block" href="" ng-click="registerController.setOccupation(occ)">{{occ}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="text-white">Sign Up</label>
+                        <label class="text-dark">Sign Up</label>
                         <button type="submit" class="btn btn-outline-success btn-block">Sign Up</button>
                     </div>
                 </div>
