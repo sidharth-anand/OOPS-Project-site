@@ -356,7 +356,8 @@
         loginSuccess: "event:auth-login-success",
         loginFailed: "event:auth-login-falied",
         loginRequired: "event:auth-login-required",
-        tokenExpired: "event:auth-token-expired"
+        tokenExpired: "event:auth-token-expired",
+        loginUnverified: "event:auth-unverified"
     });
 
 })();
@@ -365,43 +366,55 @@
     'use strict';
 
     angular.module("app").factory("Auth", Auth);
-    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper"];
+    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper", "$state"];
 
-    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper) {
-        let userDetails = {};
+    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper, $state) {
+        let userDetails = {
+            emailVerified: false,
+            phoneVerified: false
+        };
+
         let userLoggedIn = false;
-        let userRegistrationDetails = null;
         const serverPath = "http://localhost:5000";
 
         return {
             login: function(creds) {
                 let req = $http.post(serverPath + "/login", creds);
                 req.then(d => {
-                    console.log(d);
 
-                    $localStorage.authToken = d.data.authToken;
-                    $localStorage.refreshToken = d.data.refreshToken;
-
-                    userDetails = jwtHelper.decodeToken(d.data.authToken);
                     userLoggedIn = true;
 
-                    $rootScope.$broadcast(AuthEvents.loginSuccess);
+                    //Logged in but not verified
+                    if(d.data.msg) {
+
+                        if(d.data.msg.indexOf("phone") != -1) {
+                            userDetails.emailVerified = true;
+                            $state.go("verify-phone");
+                        } else {
+                            $state.go("verify-email");
+                        }
+
+                        $rootScope.$broadcast(AuthEvents.loginUnverified);
+                    } else {
+                        $localStorage.access_token = d.data.access_token;
+                        $localStorage.refresh_token = d.data.refresh_token;
+    
+                        userLoggedIn = true;
+                        
+                        $rootScope.$broadcast(AuthEvents.loginSuccess);
+                    }
+
+                    console.log(d);
                 }).catch(d => {
                     $rootScope.$broadcast(AuthEvents.loginFailed);
                 });
+
                 return req;
             },
             register: function(details) {
                 let req = $http.post(serverPath + "/register", details);
                 req.then(d => {
                     if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
-                        userRegistrationDetails = {
-                            name: details.name,
-                            email: details.email,
-                            phone: details.phone,
-                            emailVerified: false,
-                            phoneVerified: false
-                        };
                     }
                 });
                 return req;
@@ -444,10 +457,10 @@
             getRedirectStage: function() {
                 if(!userLoggedIn) {
                     return 'login';
-                } else if(!userDetails.phoneVerified) {
-                    return 'verify-phone';
                 } else if(!userDetails.emailVerified) {
                     return 'verify-email';
+                } else if(!userDetails.emailVerified) {
+                    return 'verify-phone';
                 }
             }
         }
@@ -472,19 +485,19 @@
                     return transition.router.stateService.target('home');
                 }
 
-                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                    return transition.router.stateService.target(Auth.getRedirectStage());
-                }
+                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                //     return transition.router.stateService.target(Auth.getRedirectStage());
+                // }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');
                 }
 
-                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
-                    return transition.router.stateService.target('verify-email');
+                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                    return transition.router.stateService.target('verify-phone');
                 }
 
-                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
                     return transition.router.stateService.target('home');
                 }
             });
