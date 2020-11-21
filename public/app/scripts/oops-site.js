@@ -374,8 +374,10 @@
 
         return {
             login: function(creds) {
-                let req = $http.post("/login", creds);
+                let req = $http.post(serverPath + "/login", creds);
                 req.then(d => {
+                    console.log(d);
+
                     $localStorage.authToken = d.data.authToken;
                     $localStorage.refreshToken = d.data.refreshToken;
 

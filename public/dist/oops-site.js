@@ -375,8 +375,10 @@
 
         return {
             login: function(creds) {
-                let req = $http.post("/login", creds);
+                let req = $http.post(serverPath + "/login", creds);
                 req.then(d => {
+                    console.log(d);
+
                     $localStorage.authToken = d.data.authToken;
                     $localStorage.refreshToken = d.data.refreshToken;
 
@@ -1236,11 +1238,19 @@
     let App = angular.module("app");
 
     App.controller("loginController", loginController);
-    loginController.$inject = [];
+    loginController.$inject = ["$rootScope"];
 
-    function loginController() {
+    function loginController($rootScope) {
+        let ctrl = this;
 
-    }
+        ctrl.loginForm = {};
+
+        ctrl.submit = function(valid) {
+            if(valid) {
+                $rootScope.Auth.login(ctrl.loginForm);
+            }
+        }
+    }   
 
 })();;
 (function(){
