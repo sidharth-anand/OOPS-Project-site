@@ -67,6 +67,7 @@
                 text: "Delete",
                 click: function($itemScope, $event) {
                     angular.element($event.delegateTarget).remove();
+                    cardService.deleteCardById(cardExpandedController.data.id)
                 }
             }
         ]

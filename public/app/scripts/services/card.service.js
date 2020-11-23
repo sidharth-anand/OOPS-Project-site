@@ -14,8 +14,8 @@
             deleteCardById: function(id) {
                 return baseAPIService.call('DELETE', '/cards/'+ id, {})
             },
-            editCardById: function(id) {
-                return baseAPIService.call('PUT', '/cards/'+ id, {})
+            editCardById: function(id,data) {
+                return baseAPIService.call('PUT', '/cards/'+ id, data)
             }
         }
     }

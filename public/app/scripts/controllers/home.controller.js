@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("homeController", homeController);
-    homeController.$inject = ["$rootScope"];
+    homeController.$inject = ["$rootScope","cardGroupService"];
 
-    function homeController($rootScope) {
+    function homeController($rootScope,cardGroupService) {
         let ctrl = this;
 
         ctrl.cardGroups = cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
