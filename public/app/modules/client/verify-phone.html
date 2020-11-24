@@ -6,8 +6,9 @@
                 <div otp-input-directive options="phoneVerifyController.otpOptions"></div>
             </div>
             <div class="col-md-2 mt-3">
-                <button class="btn btn-outline-success btn-block">Verify</button>
+                <button class="btn btn-outline-success btn-block" ng-click="phoneVerifyController.verify()">Verify</button>
             </div>
+            <span class="mt-2 text-danger" ng-show="phoneVerifyController.verifyFailed">There was an error in verifying your phone number</span>
         </div>
     </div>
 </div>

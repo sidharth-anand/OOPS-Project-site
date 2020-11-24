@@ -20,8 +20,11 @@
           </div>
         </div>
         <button type="submit" class="btn btn-outline-success btn-block">Sign in</button>
+        <div class="row text-center mt-2">
+          <p class="form-text text-danger col-12 mb-0" ng-show="loginController.loginFailed">Your username and/or password is incorrect</p>
+        </div>
       </form>
-      <div class="w-100 text-center my-3">Or</div>
+      <div class="w-100 text-center mb-3 mt-1">Or</div>
       <button class="btn btn-block btn-outline-danger text-center"><i class="fab fa-google mr-2"></i>Login With
         Google</button>
       <button class="btn btn-block btn-outline-light text-center"><i class="fab fa-github mr-2"></i>Login With

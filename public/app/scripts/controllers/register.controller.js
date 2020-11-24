@@ -4,12 +4,13 @@
     let App = angular.module("app");
 
     App.controller("registerController", registerController);
-    registerController.$inject = ["$rootScope"];    
+    registerController.$inject = ["$rootScope", "$scope"];    
 
-    function registerController($rootScope) {
+    function registerController($rootScope, $scope) {
         let ctrl = this;
 
         ctrl.registerForm = {
+            username: "",
             occupation: "Student"
         };
         ctrl.dropdownstatus = {
@@ -27,7 +28,12 @@
         }
 
         ctrl.checkUniqueUsername = function(form) {
-            form.username.$setValidity("unique", $rootScope.Auth.checkUniqueUsername(ctrl.registerForm.username));
+            $rootScope.Auth.checkUniqueUsername(ctrl.registerForm.username).then(d => {
+                form.username.$setValidity("unique", false);
+                console.log(d);
+            }).catch(d => {
+                form.username.$setValidity("unique", true);
+            })
         }
 
         ctrl.toggleDropdown = function() {

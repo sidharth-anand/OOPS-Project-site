@@ -10,6 +10,8 @@
         let ctrl = this;
 
         ctrl.email = $rootScope.Auth.getUserDetails().email;
+
+        $rootScope.Auth.sendVerificationEmail();
     }
 
 })();
