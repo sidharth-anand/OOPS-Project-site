@@ -33,7 +33,17 @@
         }]
 
         ctrl.selectedModel = [];
-        ctrl.searchSettings = {enableSearch: true};
+        ctrl.searchSettings = {
+            enableSearch: true,
+            showCheckAll: false,
+            showUncheckAll: false,
+            dynamicTitle: false,
+            styleActive: true,
+            buttonClasses: "btn-outline-light btn-transparent btn-transparent-light px-0"
+        };
+        ctrl.selectTexts = {
+            buttonDefaultText: "Add/Remove items to card"
+        }
 
         
 

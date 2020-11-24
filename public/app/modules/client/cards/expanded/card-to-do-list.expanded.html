@@ -1,15 +1,31 @@
 <div ng-controller="cardToDoListExpandedController as cardToDoListExpandedController">
-    
-     <form ng-submit = "cardToDoListExpandedController.todoAdd()">
-        <input type="text" ng-model="cardToDoListExpandedController.task" placeholder="Add a new task">
-        <input type="submit" value="Add Task">
-        
-     </form>
-    <div ng-repeat="x in cardToDoListExpandedController.todoList">
-        <input type="checkbox" ng-model="x.done">
-        <span contenteditable="true" ng-class="{strike: x.done}" ng-contenteditable ng-model="x.todoText"></span>
+
+    <form ng-submit="cardToDoListExpandedController.todoAdd()">
+        <div class="form-row">
+            <div class="form-group col-9">
+                <input type="text" class="form-control form-control-sm" ng-model="cardToDoListExpandedController.task" placeholder="Task #{{cardToDoListExpandedController.todoList.length + 1}}">
+            </div>
+            <div class="form-group col-3">
+                <button type="submit" class="btn btn-outline-primary btn-transparent btn-transparent-primary btn-block text-center">Add</button>
+            </div>
+        </div>
+    </form>
+
+    <h4>Tasks</h4>
+    <div class="mx-4 mt-3 mb-3">
+        <div ng-repeat="x in cardToDoListExpandedController.todoList" class="form-check">
+            <input class="form-check-input" type="checkbox" ng-model="x.done" id="taskcheck{{$index}}">
+            <span class="form-check-label" ng-class="{'task-completed':x.done}" for="taskcheck{{$index}}" contenteditable="true" ng-contenteditable ng-model="x.todoText"></span>
+        </div>
     </div>
-    <span><button ng-click="cardToDoListExpandedController.remove()">Remove marked tasks</button></span>
-    <span><button ng-click="cardToDoListExpandedController.removeAll()">Remove all</button></span>
-    
+
+    <div class="row px-0 mt-5" ng-show="cardToDoListExpandedController.todoList.length > 0">
+        <div class="col-md-4" ng-disabled="!cardToDoListExpandedController.completedTasksPresent()">
+            <button class="btn btn-outline-warning btn-transparent btn-transparent-warning btn-block text-center" ng-click="cardToDoListExpandedController.remove()()">Remove Completed</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-danger btn-transparent btn-transparent-danger btn-block text-center" ng-disabled="cardToDoListExpandedController.todoList.length <= 0" ng-click="cardToDoListExpandedController.removeAll()">Remove All</button>
+        </div>
+    </div>
+
 </div>

@@ -18,18 +18,15 @@
         };
 
         ctrl.remove = function(){
-            let oldList = ctrl.todoList;
-            ctrl.todoList = [];
-            angular.forEach(oldList,function(x){
-                if(!x.done){
-                    ctrl.todoList.push(x);
-                }
-            }) 
-            
+            ctrl.todoList = ctrl.todoList.filter(d => !d.done);
         };
 
         ctrl.removeAll = function(){
             ctrl.todoList = []
+        }
+
+        ctrl.completedTasksPresent = function() {
+            return ctrl.todoList.filter(d => d.done).length > 0;
         }
     };
 

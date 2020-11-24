@@ -1,26 +1,66 @@
 <div ng-controller="cardReminderExpandedController as cardReminderExpandedController">
-    
-    <form name="reminderForm" class="reminderForm" ng-submit = cardReminderExpandedController.addReminder() novalidate>
-            <label>Date</label><br>
-            <input type="date" ng-model="cardReminderExpandedController.date" placeholder="Date" ng-required="true"/><br>
-            <label>Time</label><br>
-            <input type="time" ng-model="cardReminderExpandedController.time" placeholder="Time" ng-required="true"/><br>
-            <button type="submit" ng-disabled="reminderForm.$invalid">Add reminder</button>
+
+    <form name="reminderForm" class="reminderForm" ng-submit=cardReminderExpandedController.addReminder() novalidate>
+        <div class="form-row">
+            <div class="form-group col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" uib-datepicker-popup="dd-MMMM-yyyy"
+                        datepicker-template-url="app/modules/uib/datepicker.html" show-button-bar="false"
+                        is-open="cardReminderExpandedController.datePopup.addDate"
+                        ng-model="cardReminderExpandedController.date" ng-required="true">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-outline-light btn-transparent btn-transparent-light"
+                            ng-click="cardReminderExpandedController.toggleDatePopup('addDate')">
+                            <i class="fas fa-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-4">
+                <div uib-timepicker ng-model="cardReminderExpandedController.time" hour-step="1" minute-step="15"
+                    template-url="app/modules/uib/timepicker.html"></div>
+            </div>
+            <div class="form-group col-3">
+                <button class="btn btn-outline-primary btn-transparent btn-transparent-primary btn-block text-center"
+                    type="submit">Add Reminder</button>
+            </div>
+        </div>
     </form>
-    <div ng-repeat = "x in cardReminderExpandedController.reminderList">
-        <div class="reminder" ng-click="editing=true">
-        Date: <span>{{x.date | date: 'MM/dd/yyyy'}}</span><br>
-        Time: <span>{{x.time | date: 'HH:mm:ss'}}</span><br>
-        
-        <form ng-show="editing" ng-submit="editing=false">
-            <label>Date</label>
-            <input type="date" ng-model="x.date" placeholder="Date" ng-required/></br>
-            <label>Time</label>
-            <input type="time" ng-model="x.time" placeholder="Time" ng-required/></br>
-            <button type="submit">Save changes</button>
-            <button ng-click="cardReminderExpandedController.removeReminder(x)">Remove Reminder</button>
-        </form>
+
+    <h4 class="mb-3">Reminders</h4>
+    <div ng-repeat="x in cardReminderExpandedController.reminderList">
+        <div class="reminder mb-3">
+            <div ng-hide="editing" ng-click="editing=true" class="text-light mt-1 mb-1 h5 ml-2">{{$index + 1}}: Reminder on: <b>{{x.date | date: 'MM-dd-yyyy'}}</b> at <b>{{x.time | date: 'HH:mm'}}</b></div>
+
+            <form name="reminderEditForm" ng-submit="editing=false" novalidate ng-blur="editing=false" ng-show="editing" class="pl-2">
+                <div class="form-row">
+                    <div class="form-group col-5">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" uib-datepicker-popup="dd-MMMM-yyyy"
+                                datepicker-template-url="app/modules/uib/datepicker.html" show-button-bar="false"
+                                is-open="cardReminderExpandedController.datePopup.editDate"
+                                ng-model="x.date" ng-required="true">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-outline-light btn-transparent btn-transparent-light"
+                                    ng-click="cardReminderExpandedController.toggleDatePopup('editDate')">
+                                    <i class="fas fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <div uib-timepicker ng-model="x.time" hour-step="1" minute-step="15"
+                            template-url="app/modules/uib/timepicker.html"></div>
+                    </div>
+                    <div class="form-group col-3">
+                        <button class="btn btn-outline-primary btn-transparent btn-transparent-primary text-center"
+                            type="submit"><i class="fas fa-check"></i></button>
+                        <button class="btn btn-outline-danger btn-transparent btn-transparent-danger text-center"
+                            ng-click="cardReminderExpandedController.reminderList.splice($index, 1)"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <button ng-click="cardReminderExpandedController.removeAll()">Remove all reminders</button>
+    <button ng-show="cardReminderExpandedController.reminderList.length > 0" ng-click="cardReminderExpandedController.removeAll()" class="btn btn-outline-danger btn-transparent btn-transparent-danger mt-3 pl-0">Remove all reminders</button>
 </div>

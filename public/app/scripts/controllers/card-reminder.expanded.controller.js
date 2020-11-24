@@ -10,13 +10,16 @@
         let ctrl = this;
 
         ctrl.reminderList = $scope.cardExpandedController.data.reminderList;
-        ctrl.date = "";
-        ctrl.time = "";
+        ctrl.date = Date.now();
+        ctrl.time = Date.now();
+        ctrl.datePopup = {
+            addDate: false
+        };
 
         ctrl.addReminder = function(){
             ctrl.reminderList.push({date: ctrl.date, time: ctrl.time, remove:false});
-            ctrl.date = "";
-            ctrl.time = "";
+            ctrl.date = Date.now();
+            ctrl.time = Date.now();
         }
 
         ctrl.removeReminder = function(reminder){
@@ -33,6 +36,10 @@
         ctrl.removeAll = function() {
             ctrl.reminderList = [];
         };
+
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
+        }
 
     }
 

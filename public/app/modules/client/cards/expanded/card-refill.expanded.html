@@ -1,25 +1,43 @@
 <div ng-controller="cardRefillExpandedController as cardRefillExpandedController">
-    <button type="submit" ng-click=cardRefillExpandedController.addToRefiller()>Add for refilling</button>
-    <div ng-dropdown-multiselect="" options="cardRefillExpandedController.groceriesList" selected-model="cardRefillExpandedController.selectedModel" extra-settings="cardRefillExpandedController.searchSettings"></div>
-    <div class="refiller">
-        <p ng-show="show">Refill {{cardRefillExpandedController.refillFreq.frequency}} starting from {{cardRefillExpandedController.refillFreq.startDate | date: 'MM/dd/yyyy'}} </p>
-        <div class="refillItem" ng-repeat="y in cardRefillExpandedController.refill">
-            <button class="x" ng-click = cardRefillExpandedController.remove(y)>x</button>
-            <p>Item: {{y.item}}</p>
-            <p>quantity: {{y.quantity}}</p>
-            <p><input type="number" min="1" class="groceryCounter" ng-model="y.quantity"></p>
-            
+
+    <h5 class="text-light mb-2">Refill On</h5>
+    <div class="form-row align-items-center">
+        <div class="form-group col-6">
+            <div class="input-group">
+                <input id="startdate" type="text" class="form-control form-control-sm" uib-datepicker-popup="dd-MMMM-yyyy"
+                    datepicker-template-url="app/modules/uib/datepicker.html" show-button-bar="false"
+                    is-open="cardRefillExpandedController.datePopup.addDate"
+                    ng-model="cardRefillExpandedController.data.startDate" ng-required="true">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-outline-light btn-transparent btn-transparent-light"
+                        ng-click="cardRefillExpandedController.toggleDatePopup('addDate')">
+                        <i class="fas fa-calendar"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <form ng-submit= cardRefillExpandedController.addFreq()>
-            <button type="submit" ng-click="show=true">Add frequency</button><br>
-            <label>Start Date</label><br>
-            <input type="date" ng-model="cardRefillExpandedController.startDate"><br>
-            <label>Frequency</label><br>
-            <select ng-model="cardRefillExpandedController.frequency" ng-options="x for x in cardRefillExpandedController.frequencies">
-                
-        </form>
+        <div class="form-group col-6 text-left">
+            <div ng-dropdown-multiselect="" options="cardRefillExpandedController.frequencies" selected-model="cardRefillExpandedController.data.refillFreq" extra-settings="cardRefillExpandedController.freqSettings"></div>
+        </div>
     </div>
 
-    
-    
+    <h5 class="text-light mb-2 mt-3">Items to refill</h5>
+    <div class="mb-5 mt-3">
+        <div class="row align-items-center mb-1" ng-repeat="y in cardRefillExpandedController.data.refill">
+            <div class="col-md-1 offset-1">
+                <h5 class="text-light font-w300">{{y.label}}</h5>
+            </div>
+            <div class="col-md-4 custom-number-input">
+                <input type="number" min="1" class="mr-0 form-control-sm" ng-model="y.quantity" ng-number-input id="quant{{$index}}" placeholder="0">
+            </div>
+            <div class="col-md-4 offset-2">
+                <button class="btn btn-outline-danger btn-transparent btn-transparent-danger btn-block text-right" ng-click = cardRefillExpandedController.remove(y)>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+  
+    <div ng-dropdown-multiselect="" options="cardRefillExpandedController.groceriesList" translation-texts="cardRefillExpandedController.selectTexts" selected-model="cardRefillExpandedController.data.refill" extra-settings="cardRefillExpandedController.searchSettings"></div>
+
 </div>

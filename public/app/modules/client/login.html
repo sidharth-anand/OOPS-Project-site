@@ -1,22 +1,35 @@
 <div class="container-fluid h-100">
-    <div class="row h-100">
-        <div class="col-md-2 mx-auto my-auto">
-            <h2 class="text-center mb-5">Sign In to AppName</h2>
-            <form class="pt-2">
-                <div class="form-group">
-                  <label for="emailinput">Email</label>
-                  <input type="email" class="form-control" id="emailinput" aria-describedby="emailHelp" placeholder="johndoe@email.com">
-                </div>
-                <div class="form-group">
-                  <label for="pwinput">Password</label>
-                  <input type="password" class="form-control" id="pwinput" placeholder="">
-                </div>
-                <button type="submit" class="btn btn-outline-success btn-block">Sign in</button>
-            </form>
-            <div class="w-100 text-center my-3">Or</div>
-            <button class="btn btn-block btn-outline-danger text-center"><i class="fab fa-google mr-2"></i>Login With Google</button>
-            <button class="btn btn-block btn-outline-light text-center"><i class="fab fa-github mr-2"></i>Login With Github</button>
-            <p class="form-text text-muted mt-2">First time here? <a ui-sref="register">Sign Up</a></p>
+  <div class="row h-100">
+    <div class="col-md-2 mx-auto my-auto">
+      <h2 class="text-center mb-5">Sign In to AppName</h2>
+      <form class="pt-2" name="loginForm" ng-submit="loginController.submit(loginForm.$valid)" novalidate>
+        <div class="form-group"
+          ng-class="{'has-error':loginForm.username.$invalid && loginForm.$submitted && loginForm.username.$error}">
+          <label for="emailinput">Username</label>
+          <input type="text" class="form-control" id="emailinput" aria-describedby="emailHelp"
+            placeholder="john_doe_1743" name="username" ng-model="loginController.loginForm.username" required>
+          <div ng-messages="loginForm.username.$error" ng-show="loginForm.$submitted">
+            <small ng-message="required" class="form-text text-danger">This field is required</small>
+          </div>
         </div>
+        <div class="form-group" ng-class="{'has-error':loginForm.password.$invalid && loginForm.$submitted && loginForm.password.$error}">
+          <label for="pwinput">Password</label>
+          <input type="password" class="form-control" id="pwinput" placeholder="" name="password" ng-model="loginController.loginForm.password" required>
+          <div ng-messages="loginForm.password.$error" ng-show="loginForm.$submitted">
+            <small ng-message="required" class="form-text text-danger">This field is required</small>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-outline-success btn-block">Sign in</button>
+        <div class="row text-center mt-2">
+          <p class="form-text text-danger col-12 mb-0" ng-show="loginController.loginFailed">Your username and/or password is incorrect</p>
+        </div>
+      </form>
+      <div class="w-100 text-center mb-3 mt-1">Or</div>
+      <button class="btn btn-block btn-outline-danger text-center"><i class="fab fa-google mr-2"></i>Login With
+        Google</button>
+      <button class="btn btn-block btn-outline-light text-center"><i class="fab fa-github mr-2"></i>Login With
+        Github</button>
+      <p class="form-text text-muted mt-2">First time here? <a ui-sref="register">Sign Up</a></p>
     </div>
+  </div>
 </div>

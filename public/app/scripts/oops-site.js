@@ -69,6 +69,15 @@
                 data: {
                     unAuth: true
                 }
+            })
+            .state('verifying-email', {
+                url: '/verifying-email/{code}',
+                templateUrl: 'app/modules/client/verifying-email.html',
+                controller: "verifyingEmailController",
+                controllerAs: "verifyingEmailController",
+                data: {
+                    unAuth: true
+                }
             });
     }
 
@@ -355,7 +364,8 @@
         loginSuccess: "event:auth-login-success",
         loginFailed: "event:auth-login-falied",
         loginRequired: "event:auth-login-required",
-        tokenExpired: "event:auth-token-expired"
+        tokenExpired: "event:auth-token-expired",
+        loginUnverified: "event:auth-unverified"
     });
 
 })();
@@ -364,55 +374,130 @@
     'use strict';
 
     angular.module("app").factory("Auth", Auth);
-    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper"];
+    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper", "$state"];
 
-    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper) {
-        let userDetails = {};
+    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper, $state) {
+        let userDetails = {
+            emailVerified: false,
+            phoneVerified: false
+        };
+
         let userLoggedIn = false;
+        let enteredPassword = "";
+        const serverPath = "http://localhost:5000";
 
         return {
             login: function(creds) {
-                let req = $http.post("/login", creds);
+                let req = $http.post(serverPath + "/login", creds);
                 req.then(d => {
-                    $localStorage.authToken = d.data.authToken;
-                    $localStorage.refreshToken = d.data.refreshToken;
 
-                    userDetails = jwtHelper.decodeToken(d.data.authToken);
                     userLoggedIn = true;
 
+                    $localStorage.access_token = d.data.access_token;
+                    $localStorage.refresh_token = d.data.refresh_token;
+
+                    userLoggedIn = true;
+                    
                     $rootScope.$broadcast(AuthEvents.loginSuccess);
+
+                    console.log(d);
                 }).catch(d => {
+                    userDetails.username = creds.username;
+                    enteredPassword = creds.password;
+
+                    if(d.data.msg) {
+                        if(d.data.msg.indexOf("Phone") != -1) {
+                            userDetails.emailVerified = true;
+                            userDetails.email = d.data.email;
+                            userDetails.phone = d.data.phone;
+
+                            userLoggedIn = true;
+                            
+                            $state.go("verify-phone");
+                        } else if(d.data.msg.indexOf("Email") != -1) {
+                            userDetails.email = d.data.email;
+                            userDetails.phone = d.data.phone;
+
+                            userLoggedIn = true;
+
+                            $state.go("verify-email");
+                        }
+
+                        $rootScope.$broadcast(AuthEvents.loginUnverified);
+                    } 
+
                     $rootScope.$broadcast(AuthEvents.loginFailed);
+                });
+
+                return req;
+            },
+            register: function(details) {
+                let req = $http.post(serverPath + "/register", details);
+                req.then(d => {
+                    if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
+                    }
                 });
                 return req;
             },
-            checkPreviousLogin: function() {
-                let logged =  $localStorage.authToken && $localStorage.refreshToken && !this.isTokenExpired();
-                
-                if(logged) {
-                    userDetails = jwtHelper.decodeToken($localStorage.authToken);
+            sendVerificationEmail: function() {
+                let req = $http.get(serverPath + "/send_email/" + userDetails.email);
+                return req;
+            },
+            verifyEmail: function(code) {
+                let req = $http.get(serverPath + "/email_confirm/" + code);
 
-                    userDetails.phoneVerified = userDetails.phoneVerified === "true";
-                    userDetails.emailVerified = userDetails.emailVerified === "true";
-                    
-                    userLoggedIn = true;
-                }
+                req.then(d => {
+                    userDetails.emailVerified = true;
+                    $state.go("verify-phone");
+                });
+
+                return req;
+            },
+            sendOTP: function() {
+                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
+                return req;
+            },
+            verifyOTP: function(otp) {
+                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+                
+                req.then(d => {
+                    this.login({
+                        username: userDetails.username,
+                        password: enteredPassword
+                    }).then(d => {
+                        $state.go("home");
+                    });
+                });
+
+                return req;
+            },
+            checkPreviousLogin: function() {
+                let logged =  $localStorage.access_token && $localStorage.refresh_token && !this.isTokenExpired();
+                
+                userLoggedIn = logged;
+                userDetails.emailVerified = true;
+                userDetails.phoneVerified = true;
+                
+                console.log(logged);
+                console.log($localStorage.access_token, $localStorage.refresh_token, this.isTokenExpired());
 
                 return logged;
+            },
+            checkUniqueUsername: function(name) {
+                return $http.get(serverPath + '/check_username/' + name);
             },
             isLoggedIn: function() {
                 return userLoggedIn;
             },
             getUserDetails: function() {
-                return userDetails;
+                return JSON.parse(JSON.stringify(userDetails));
             },
             isTokenExpired: function() {
-                if(!$localStorage.authToken) {
+                if(!$localStorage.access_token) {
                     return true;
                 }
 
-                let expiration = jwtHelper.getTokenExpirationDate($localStorage.authToken);
-                return !(!expiration || (expiration < Date.now()));
+                return !jwtHelper.decodeToken($localStorage.access_token).fresh;
             },
             isUserVerified: function() {
                 return userLoggedIn && !!userDetails.phoneVerified && !!userDetails.emailVerified;
@@ -420,11 +505,14 @@
             getRedirectStage: function() {
                 if(!userLoggedIn) {
                     return 'login';
-                } else if(!userDetails.phoneVerified) {
-                    return 'verify-phone';
                 } else if(!userDetails.emailVerified) {
                     return 'verify-email';
+                } else if(!userDetails.emailVerified) {
+                    return 'verify-phone';
                 }
+            },
+            getAccessToken: function() {
+                return $localStorage.access_token;
             }
         }
     }
@@ -448,19 +536,19 @@
                     return transition.router.stateService.target('home');
                 }
 
-                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                    return transition.router.stateService.target(Auth.getRedirectStage());
-                }
+                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                //     return transition.router.stateService.target(Auth.getRedirectStage());
+                // }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');
                 }
 
-                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
-                    return transition.router.stateService.target('verify-email');
+                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                    return transition.router.stateService.target('verify-phone');
                 }
 
-                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
                     return transition.router.stateService.target('home');
                 }
             });

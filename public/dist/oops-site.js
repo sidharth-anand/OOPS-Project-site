@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-19 */
+/*! oops-site 2020-11-24 */
 
 (function () {
     'use strict';
@@ -67,6 +67,15 @@
                 templateUrl: 'app/modules/client/verify-email.html',
                 controller: "verifyEmailController",
                 controllerAs: "verifyEmailController",
+                data: {
+                    unAuth: true
+                }
+            })
+            .state('verifying-email', {
+                url: '/verifying-email/{code}',
+                templateUrl: 'app/modules/client/verifying-email.html',
+                controller: "verifyingEmailController",
+                controllerAs: "verifyingEmailController",
                 data: {
                     unAuth: true
                 }
@@ -356,7 +365,8 @@
         loginSuccess: "event:auth-login-success",
         loginFailed: "event:auth-login-falied",
         loginRequired: "event:auth-login-required",
-        tokenExpired: "event:auth-token-expired"
+        tokenExpired: "event:auth-token-expired",
+        loginUnverified: "event:auth-unverified"
     });
 
 })();
@@ -365,55 +375,130 @@
     'use strict';
 
     angular.module("app").factory("Auth", Auth);
-    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper"];
+    Auth.$inject = ["$rootScope", "$http", "AuthEvents", "$localStorage", "jwtHelper", "$state"];
 
-    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper) {
-        let userDetails = {};
+    function Auth($rootScope, $http, AuthEvents, $localStorage, jwtHelper, $state) {
+        let userDetails = {
+            emailVerified: false,
+            phoneVerified: false
+        };
+
         let userLoggedIn = false;
+        let enteredPassword = "";
+        const serverPath = "http://localhost:5000";
 
         return {
             login: function(creds) {
-                let req = $http.post("/login", creds);
+                let req = $http.post(serverPath + "/login", creds);
                 req.then(d => {
-                    $localStorage.authToken = d.data.authToken;
-                    $localStorage.refreshToken = d.data.refreshToken;
 
-                    userDetails = jwtHelper.decodeToken(d.data.authToken);
                     userLoggedIn = true;
 
+                    $localStorage.access_token = d.data.access_token;
+                    $localStorage.refresh_token = d.data.refresh_token;
+
+                    userLoggedIn = true;
+                    
                     $rootScope.$broadcast(AuthEvents.loginSuccess);
+
+                    console.log(d);
                 }).catch(d => {
+                    userDetails.username = creds.username;
+                    enteredPassword = creds.password;
+
+                    if(d.data.msg) {
+                        if(d.data.msg.indexOf("Phone") != -1) {
+                            userDetails.emailVerified = true;
+                            userDetails.email = d.data.email;
+                            userDetails.phone = d.data.phone;
+
+                            userLoggedIn = true;
+                            
+                            $state.go("verify-phone");
+                        } else if(d.data.msg.indexOf("Email") != -1) {
+                            userDetails.email = d.data.email;
+                            userDetails.phone = d.data.phone;
+
+                            userLoggedIn = true;
+
+                            $state.go("verify-email");
+                        }
+
+                        $rootScope.$broadcast(AuthEvents.loginUnverified);
+                    } 
+
                     $rootScope.$broadcast(AuthEvents.loginFailed);
+                });
+
+                return req;
+            },
+            register: function(details) {
+                let req = $http.post(serverPath + "/register", details);
+                req.then(d => {
+                    if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
+                    }
                 });
                 return req;
             },
-            checkPreviousLogin: function() {
-                let logged =  $localStorage.authToken && $localStorage.refreshToken && !this.isTokenExpired();
-                
-                if(logged) {
-                    userDetails = jwtHelper.decodeToken($localStorage.authToken);
+            sendVerificationEmail: function() {
+                let req = $http.get(serverPath + "/send_email/" + userDetails.email);
+                return req;
+            },
+            verifyEmail: function(code) {
+                let req = $http.get(serverPath + "/email_confirm/" + code);
 
-                    userDetails.phoneVerified = userDetails.phoneVerified === "true";
-                    userDetails.emailVerified = userDetails.emailVerified === "true";
-                    
-                    userLoggedIn = true;
-                }
+                req.then(d => {
+                    userDetails.emailVerified = true;
+                    $state.go("verify-phone");
+                });
+
+                return req;
+            },
+            sendOTP: function() {
+                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
+                return req;
+            },
+            verifyOTP: function(otp) {
+                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+                
+                req.then(d => {
+                    this.login({
+                        username: userDetails.username,
+                        password: enteredPassword
+                    }).then(d => {
+                        $state.go("home");
+                    });
+                });
+
+                return req;
+            },
+            checkPreviousLogin: function() {
+                let logged =  $localStorage.access_token && $localStorage.refresh_token && !this.isTokenExpired();
+                
+                userLoggedIn = logged;
+                userDetails.emailVerified = true;
+                userDetails.phoneVerified = true;
+                
+                console.log(logged);
+                console.log($localStorage.access_token, $localStorage.refresh_token, this.isTokenExpired());
 
                 return logged;
+            },
+            checkUniqueUsername: function(name) {
+                return $http.get(serverPath + '/check_username/' + name);
             },
             isLoggedIn: function() {
                 return userLoggedIn;
             },
             getUserDetails: function() {
-                return userDetails;
+                return JSON.parse(JSON.stringify(userDetails));
             },
             isTokenExpired: function() {
-                if(!$localStorage.authToken) {
+                if(!$localStorage.access_token) {
                     return true;
                 }
 
-                let expiration = jwtHelper.getTokenExpirationDate($localStorage.authToken);
-                return !(!expiration || (expiration < Date.now()));
+                return !jwtHelper.decodeToken($localStorage.access_token).fresh;
             },
             isUserVerified: function() {
                 return userLoggedIn && !!userDetails.phoneVerified && !!userDetails.emailVerified;
@@ -421,11 +506,14 @@
             getRedirectStage: function() {
                 if(!userLoggedIn) {
                     return 'login';
-                } else if(!userDetails.phoneVerified) {
-                    return 'verify-phone';
                 } else if(!userDetails.emailVerified) {
                     return 'verify-email';
+                } else if(!userDetails.emailVerified) {
+                    return 'verify-phone';
                 }
+            },
+            getAccessToken: function() {
+                return $localStorage.access_token;
             }
         }
     }
@@ -449,19 +537,19 @@
                     return transition.router.stateService.target('home');
                 }
 
-                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                    return transition.router.stateService.target(Auth.getRedirectStage());
-                }
+                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                //     return transition.router.stateService.target(Auth.getRedirectStage());
+                // }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');
                 }
 
-                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
-                    return transition.router.stateService.target('verify-email');
+                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                    return transition.router.stateService.target('verify-phone');
                 }
 
-                if(transition.to().name == 'verify-email' && Auth.getUserDetails().emailVerified) {
+                if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
                     return transition.router.stateService.target('home');
                 }
             });
@@ -659,29 +747,13 @@
 
         ctrl.meeting = $scope.cardExpandedController.data.meeting;
 
-        ctrl.date = "";
-        ctrl.time = "";
-        ctrl.document = "";
-
-        ctrl.showMeeting = true;
-
-        ctrl.addMeeting = function() {
-            ctrl.meeting.date = ctrl.date;
-            ctrl.meeting.time = ctrl.time;
-            ctrl.meeting.document = ctrl.document;
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-        };
-
-        ctrl.cancelInput = function() {
-            ctrl.date = "";
-            ctrl.time = "";
-            ctrl.document = "";
-            ctrl.showMeeting = true;
+        ctrl.datePopup = {
+            addDate: false
         }
 
-        
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
+        }
     }
 
 })();;
@@ -727,9 +799,14 @@
     function cardRefillExpandedController($scope) {
         let ctrl = this;
 
+        ctrl.data = $scope.cardExpandedController.data;
         ctrl.refill = $scope.cardExpandedController.data.refill;
         ctrl.refillFreq = $scope.cardExpandedController.data.refillFreq;
-        
+        ctrl.startDate = $scope.cardExpandedController.data.startDate;
+
+        ctrl.datePopup = {
+            addDate: false
+        }
 
         ctrl.groceriesList = [{
             id: 1,
@@ -754,10 +831,48 @@
 
         
         ctrl.selectedModel = [];
-        ctrl.searchSettings = {enableSearch: true};
+        ctrl.searchSettings = {
+            enableSearch: true,
+            showCheckAll: false,
+            showUncheckAll: false,
+            dynamicTitle: false,
+            styleActive: true,
+            buttonClasses: "btn-outline-light btn-transparent btn-transparent-light px-0"
+        };
+        ctrl.selectTexts = {
+            buttonDefaultText: "Add/Remove items to card"
+        }
+
+        ctrl.freqSettings = {
+            enableSearch: false,
+            showCheckAll: false,
+            showUncheckAll: false,
+            dynamicTitle: true,
+            styleActive: true,
+            buttonClasses: "btn-outline-light btn-transparent btn-transparent-light px-0",
+            selectionLimit: 1,
+            smartButtonMaxItems: 1,
+        }
 
         
-        ctrl.frequencies = ["Once","Daily","Weekly","Monthly"]
+        ctrl.frequencies = [
+            {
+                "id": "1",
+                "label": "Once"
+            },
+            {
+                "id": "2",
+                "label": "Daily"
+            },
+            {
+                "id": "3",
+                "label": "Weekly"
+            },
+            {
+                "id": "4",
+                "label": "Monthly"
+            }
+        ];
 
         
 
@@ -772,23 +887,12 @@
         };
 
         ctrl.remove = function(refillItem){
-            ctrl.refill.splice(ctrl.refill.indexOf(refillItem),1);
+            ctrl.data.refill.splice(ctrl.data.refill.indexOf(refillItem),1);
+        };        
 
-        };
-
-        ctrl.frequency = "";
-        ctrl.startDate = "";
-
-        ctrl.addFreq = function(){
-            ctrl.refillFreq = {
-                frequency: ctrl.frequency,
-                startDate: ctrl.startDate
-            }
-            ctrl.frequency = "";
-            ctrl.startDate = "";
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
         }
-
-        
     }
 
 })();;
@@ -835,13 +939,16 @@
         let ctrl = this;
 
         ctrl.reminderList = $scope.cardExpandedController.data.reminderList;
-        ctrl.date = "";
-        ctrl.time = "";
+        ctrl.date = Date.now();
+        ctrl.time = Date.now();
+        ctrl.datePopup = {
+            addDate: false
+        };
 
         ctrl.addReminder = function(){
             ctrl.reminderList.push({date: ctrl.date, time: ctrl.time, remove:false});
-            ctrl.date = "";
-            ctrl.time = "";
+            ctrl.date = Date.now();
+            ctrl.time = Date.now();
         }
 
         ctrl.removeReminder = function(reminder){
@@ -858,6 +965,10 @@
         ctrl.removeAll = function() {
             ctrl.reminderList = [];
         };
+
+        ctrl.toggleDatePopup = function(popup) {
+            ctrl.datePopup[popup] = !ctrl.datePopup[popup];
+        }
 
     }
 
@@ -928,7 +1039,17 @@
         }]
 
         ctrl.selectedModel = [];
-        ctrl.searchSettings = {enableSearch: true};
+        ctrl.searchSettings = {
+            enableSearch: true,
+            showCheckAll: false,
+            showUncheckAll: false,
+            dynamicTitle: false,
+            styleActive: true,
+            buttonClasses: "btn-outline-light btn-transparent btn-transparent-light px-0"
+        };
+        ctrl.selectTexts = {
+            buttonDefaultText: "Add/Remove items to card"
+        }
 
         
 
@@ -1019,18 +1140,15 @@
         };
 
         ctrl.remove = function(){
-            let oldList = ctrl.todoList;
-            ctrl.todoList = [];
-            angular.forEach(oldList,function(x){
-                if(!x.done){
-                    ctrl.todoList.push(x);
-                }
-            }) 
-            
+            ctrl.todoList = ctrl.todoList.filter(d => !d.done);
         };
 
         ctrl.removeAll = function(){
             ctrl.todoList = []
+        }
+
+        ctrl.completedTasksPresent = function() {
+            return ctrl.todoList.filter(d => d.done).length > 0;
         }
     };
 
@@ -1144,7 +1262,12 @@
                     {
                         name: "Meeting Card",
                         type: "Meeting",
-                        meeting: {}
+                        meeting: {
+                            date: Date.now(),
+                            time: Date.now(),
+                            link: "https://asd.com/qwe-123-asd",
+                            documents:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                        }
                     },
                     {
                         name: "Grocery stock Card",
@@ -1154,8 +1277,9 @@
                     {
                         name: "Grocery refill Card",
                         type: "Grocery refill",
+                        startDate: new Date(),
                         refill: [],
-                        refillFreq: {}
+                        refillFreq: []
                     }
                 ]
             },
@@ -1179,11 +1303,24 @@
     let App = angular.module("app");
 
     App.controller("loginController", loginController);
-    loginController.$inject = [];
+    loginController.$inject = ["$rootScope", "$state"];
 
-    function loginController() {
+    function loginController($rootScope, $state) {
+        let ctrl = this;
 
-    }
+        ctrl.loginForm = {};
+        ctrl.loginFailed = false;
+
+        ctrl.submit = function(valid) {
+            if(valid) {
+                $rootScope.Auth.login(ctrl.loginForm).then(d => {
+                    $state.go("home");
+                }).catch(d => {
+                    ctrl.loginFailed = true;
+                });
+            }
+        }
+    }   
 
 })();;
 (function(){
@@ -1197,6 +1334,9 @@
     function phoneVerifyController($rootScope) {
         let ctrl = this;
 
+        ctrl.otp = "";
+        ctrl.verifyFailed = false;
+
         ctrl.otpOptions = {
             size: 6,
             type: "text",
@@ -1204,11 +1344,19 @@
 
             },
             onChange: (val) => {
-
+                ctrl.otp = "" + val;
             }
         }
 
+        $rootScope.Auth.sendOTP();
+
         ctrl.phone = $rootScope.Auth.getUserDetails().phone;
+
+        ctrl.verify = function() {
+            $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
+                ctrl.verifyFailed = true;
+            });
+        }
     }
 
 })();;
@@ -1218,10 +1366,65 @@
     let App = angular.module("app");
 
     App.controller("registerController", registerController);
-    registerController.$inject = [];    
+    registerController.$inject = ["$rootScope", "$scope"];    
 
-    function registerController() {
+    function registerController($rootScope, $scope) {
+        let ctrl = this;
 
+        ctrl.registerForm = {
+            username: "",
+            occupation: "Student"
+        };
+        ctrl.dropdownstatus = {
+            isopen:false
+        }
+
+        ctrl.occupations = ["Student", "Job-Seeker", "Employed", "Home-Maker"]
+
+        ctrl.checkPasswordMatch = function(form) {
+            if(ctrl.registerForm.password == ctrl.registerForm.passwordrepeat) {
+                form.passwordrepeat.$setValidity('mismatch', true);
+            } else {
+                form.passwordrepeat.$setValidity('mismatch', false);
+            }
+        }
+
+        ctrl.checkUniqueUsername = function(form) {
+            $rootScope.Auth.checkUniqueUsername(ctrl.registerForm.username).then(d => {
+                form.username.$setValidity("unique", false);
+                console.log(d);
+            }).catch(d => {
+                form.username.$setValidity("unique", true);
+            })
+        }
+
+        ctrl.toggleDropdown = function() {
+            ctrl.dropdownstatus.isopen = !ctrl.dropdownstatus.isopen;
+        }
+
+        ctrl.removeUniqueValidation = function(form, field) {
+            form[field].$setValidity("unique", true);
+        }
+
+        ctrl.submit = function(form, valid) {
+            if(valid) {
+                $rootScope.Auth.register({
+                    username: ctrl.registerForm.username,
+                    password: ctrl.registerForm.password,
+                    email: ctrl.registerForm.email,
+                    phone: ctrl.registerForm.phone.split(" ").join(""),
+                    profession: ctrl.registerForm.occupation
+                }).then(d => {
+                    if(d.data.msg.indexOf("error") != -1) {
+                        if(d.data.msg.indexOf("E1100") != -1) {
+                            form[d.data.msg.match("keyValue': {'([a-z]*)'")[1]].$setValidity("unique", false);
+                        }
+                    }
+                }).catch(d => {
+                    console.log("regerr", d);
+                })
+            }
+        }
     }
 })();;
 (function(){
@@ -1236,6 +1439,30 @@
         let ctrl = this;
 
         ctrl.email = $rootScope.Auth.getUserDetails().email;
+
+        $rootScope.Auth.sendVerificationEmail();
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("verifyingEmailController", verifyingEmailController);
+    verifyingEmailController.$inject = ["$rootScope", "$state"];
+
+    function verifyingEmailController($rootScope, $state) {
+        let ctrl = this;
+
+        ctrl.verifyFailed = false;
+
+        $rootScope.Auth.verifyEmail($state.params.code).then(d => {
+
+        }).catch(d => {
+            ctrl.verifyFailed = true;
+        });
+
     }
 
 })();;
@@ -1514,6 +1741,25 @@
                     }
                     ngModel.$setViewValue(html);
                 }
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("ngNumberInput", ngNumberInput);
+    ngNumberInput.$inject = ["$rootScope", "$compile"];
+
+    function ngNumberInput() {
+        return {
+            restrict: 'A',
+            replace: false,
+            link: function(scope, element, attrs) {
+                angular.element(element).inputSpinner();
             }
         }
     }
