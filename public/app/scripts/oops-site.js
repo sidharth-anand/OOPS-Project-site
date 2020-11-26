@@ -17,7 +17,8 @@
         'angular-jwt',
         'otpInputDirective',
         'angularjs-dropdown-multiselect',
-        'dndLists'
+        'dndLists',
+        'mwl.calendar',
     ]);
 
     // // Router configuration
@@ -78,6 +79,12 @@
                 data: {
                     unAuth: true
                 }
+            })
+            .state("diary", {
+                url: '/diary',
+                templateUrl: 'app/modules/client/diary.html',
+                controller: "diaryController",
+                controllerAs: "diaryController",
             });
     }
 
@@ -536,9 +543,9 @@
                     return transition.router.stateService.target('home');
                 }
 
-                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                //     return transition.router.stateService.target(Auth.getRedirectStage());
-                // }
+                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                    return transition.router.stateService.target(Auth.getRedirectStage());
+                }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');

@@ -1,8 +1,8 @@
 Arguments: 
-  D:\Environments\NodeJS\node.exe D:\Projects\Web\oops-project-site\.yarn\releases\yarn-1.22.10.cjs add boostrap-input-spinner --modules-folder ./public/yarn_components
+  D:\Environments\NodeJS\node.exe D:\Projects\Web\oops-project-site\.yarn\releases\yarn-1.22.10.cjs add angular-boostrap-calendar --modules-folder ./public/yarn_components
 
 PATH: 
-  D:\Environments\CUDA\Toolkit\bin;D:\Environments\CUDA\Toolkit\libnvvp;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;D:\Environments\Python\Scripts\;D:\Environments\Python\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;D:\Environments\MongoDB\bin;D:\Environments\Git\bin;D:\Environments\NodeJS;C:\Users\Sidharth\AppData\Roaming\npm;D:\Environments\CMake\bin;D:\Environments\NodeJS\;D:\Programs\Calibre\;D:\Environments\Java\bin;D:\Environments\KeyCloak\keycloak-11.0.0\bin\kc;D:\Environments\nginx;D:\Programs\GitHub CLI;D:\Environments\OpenCV\opencv\build\x64\vc15\bin;D:\Programs\Tesseract OCR;C:\Program Files\NVIDIA Corporation\Nsight Compute 2020.2.0\;D:\Programs\GNU-Make\bin;D:\Environments\MinGW\bin;C:\Users\Sidharth\AppData\Local\Microsoft\WindowsApps;;D:\Programs\PyCharm\bin;;D:\Programs\VS Code\bin;C:\Users\Sidharth\AppData\Roaming\npm;D:\Environments\Heroku\bin;D:\Programs\GitHub CLI\
+  D:\Environments\CUDA\Toolkit\bin;D:\Environments\CUDA\Toolkit\libnvvp;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;D:\Environments\Python\Scripts\;D:\Environments\Python\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;D:\Environments\MongoDB\bin;D:\Environments\Git\bin;D:\Environments\NodeJS;C:\Users\Sidharth\AppData\Roaming\npm;D:\Environments\CMake\bin;D:\Environments\NodeJS\;D:\Programs\Calibre\;D:\Environments\Java\bin;D:\Environments\KeyCloak\keycloak-11.0.0\bin\kc;D:\Environments\nginx;D:\Programs\GitHub CLI;D:\Environments\OpenCV\opencv\build\x64\vc15\bin;D:\Programs\Tesseract OCR;C:\Program Files\NVIDIA Corporation\Nsight Compute 2020.2.0\;D:\Programs\GNU-Make\bin;D:\Environments\MinGW\bin;D:\Environments\TDM-GCC\bin;C:\Users\Sidharth\AppData\Local\Microsoft\WindowsApps;;D:\Programs\PyCharm\bin;;D:\Programs\VS Code\bin;C:\Users\Sidharth\AppData\Roaming\npm;D:\Environments\Heroku\bin;D:\Programs\GitHub CLI\
 
 Yarn version: 
   1.22.10
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.npmjs.org/boostrap-input-spinner: Not found
+  Error: https://registry.npmjs.org/angular-boostrap-calendar: Not found
       at Request.params.callback [as _callback] (D:\Projects\Web\oops-project-site\.yarn\releases\yarn-1.22.10.cjs:78518:18)
       at Request.self.callback (D:\Projects\Web\oops-project-site\.yarn\releases\yarn-1.22.10.cjs:135160:22)
       at Request.emit (events.js:310:20)
@@ -75,6 +75,7 @@ npm manifest:
       "angular-ui-router": "^1.0.28",
       "angularjs-dropdown-multiselect": "^2.0.0-beta.10",
       "bootstrap": "^4.5.3",
+      "bootstrap-input-spinner": "^1.16.8",
       "jquery": "^3.5.1",
       "jquery-ui": "^1.12.1",
       "lazyload": "^2.0.0-rc.2",
@@ -319,7 +320,16 @@ Lockfile:
       raw-body "~1.1.0"
       safe-json-parse "~1.0.1"
   
-  bootstrap@^4.5.3:
+  bootstrap-input-spinner@^1.16.8:
+    version "1.16.8"
+    resolved "https://registry.yarnpkg.com/bootstrap-input-spinner/-/bootstrap-input-spinner-1.16.8.tgz#397c61b0e0c803d9e5ca16196e3fa91251443b1a"
+    integrity sha512-7VFHIwrWeSyNg+bHy3cpc4Pir1+nfhTeM47GhbgdLSmCI+xtn4cmccums/IPk3YBRv/zz5heFG1u9U7jT8DuUQ==
+    dependencies:
+      bootstrap "^4.5.2"
+      jquery "^3.5.1"
+      popper.js "^1.16.1"
+  
+  bootstrap@^4.5.2, bootstrap@^4.5.3:
     version "4.5.3"
     resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.3.tgz#c6a72b355aaf323920be800246a6e4ef30997fe6"
     integrity sha512-o9ppKQioXGqhw8Z7mah6KdTYpNQY//tipnkxppWhPbiSWdD+1raYsnhwEZjkTHYbGee4cVQ0Rx65EhOY/HNLcQ==
