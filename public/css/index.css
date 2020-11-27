@@ -14372,6 +14372,14 @@ table tr a:hover{
   background-color: #2F2F2F;
 }
 
+.add-group {
+  opacity:0.6;
+}
+
+.add-group:hover {
+  opacity:0.8;
+}
+
 .dndPlaceholder.card-column-placeholder {
   background-color: #2f2f2f;
   min-width:16.66%;
