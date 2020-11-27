@@ -19,6 +19,10 @@
 
         ctrl.hideExtra = true;
 
+        ctrl.logout = function() {
+            $rootScope.Auth.logout();
+        }
+
         $transitions.onBefore({}, transition => {
             if(transition.to().data && transition.to().data.unAuth) {
                 ctrl.hideExtra = true;

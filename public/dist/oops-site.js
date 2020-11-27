@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-26 */
+/*! oops-site 2020-11-27 */
 
 (function () {
     'use strict';
@@ -403,12 +403,11 @@
 
                     $localStorage.access_token = d.data.access_token;
                     $localStorage.refresh_token = d.data.refresh_token;
-
-                    userLoggedIn = true;
                     
                     $rootScope.$broadcast(AuthEvents.loginSuccess);
 
-                    console.log(d);
+                    userDetails.phoneVerified = true;
+                    userDetails.emailVerified = true;
                 }).catch(d => {
                     userDetails.username = creds.username;
                     enteredPassword = creds.password;
@@ -467,12 +466,8 @@
 
                 return req;
             },
-            sendOTP: function() {
-                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
-                return req;
-            },
-            verifyOTP: function(otp) {
-                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+            verifyPhone: function() {
+                let req = $http.get(serverPath + "/phone_confirm/" + userDetails.phone);
                 
                 req.then(d => {
                     this.login({
@@ -526,6 +521,25 @@
             },
             getAccessToken: function() {
                 return $localStorage.access_token;
+            },
+            logout: function() {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + this.getAccessToken();
+                let req = $http.post(serverPath + "/logout");
+                req.then(d => {
+                    $localStorage.$reset();
+
+                    userLoggedIn = false;
+                    userDetails.emailVerified = false;
+                    userDetails.phoneVerified = false;
+                    userDetails.username = "";
+                    userDetails.email = "";
+                    userDetails.phone = "";
+                    userDetails.password = "";
+
+                    $state.go("login");
+                })
+
+                return req;
             }
         }
     }
@@ -633,7 +647,10 @@
                         if(navigator.share) {
                             navigator.share(shareData);
                         } else {
-                            console.log("Use email here");
+                            let maillink = angular.element(`<a href="mailto:x@x.com?subject=${shareData.title}&amp;body=${shareData.text}">Link</a>`);
+                            maillink.appendTo("body");
+                            maillink.trigger("click");
+                            console.log(maillink);
                         }
                     }
                 }
@@ -707,6 +724,52 @@
 
         ctrl.data = $scope.groupData;
         ctrl.groupInfo = {name: ctrl.data.name};
+
+        ctrl.contextMenuOptions = [
+            {
+                text: "Delete",
+                click: function($itemScope, $event) {
+                    angular.element($event.delegateTarget).remove();
+                }
+            }
+        ];
+
+        ctrl.addCard = function(type) {
+            let newcard = {
+                name: "Card " + (ctrl.data.cards.length + 1),
+                type: type
+            };
+
+            switch (type) {
+                case "Text": 
+                    newcard.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    break;
+                case "Reminder":
+                    newcard.reminderList = [];
+                    break;
+                case "To-do list":
+                    newcard.list = [];
+                    break;
+                case "Meeting":
+                    newcard.meeting = {
+                        date: Date.now(),
+                        time: Date.now(),
+                        link: "https://asd.com/qwe-123-asd",
+                        documents:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    };
+                    break;
+                case "Grocery stock":
+                    newcard.inventory = [];
+                    break;
+                case "Grocery refill":
+                    newcard.refill = [];
+                    newcard.refillFreq = [];
+                    newcard.startDate = new Date();
+                    break;
+            }
+
+            ctrl.data.cards.push(newcard);
+        }
 
         $scope.$watch(function() {
             return ctrl.data.name;
@@ -1297,6 +1360,10 @@
 
         ctrl.hideExtra = true;
 
+        ctrl.logout = function() {
+            $rootScope.Auth.logout();
+        }
+
         $transitions.onBefore({}, transition => {
             if(transition.to().data && transition.to().data.unAuth) {
                 ctrl.hideExtra = true;
@@ -1325,6 +1392,13 @@
 
     function homeController($rootScope) {
         let ctrl = this;
+
+        ctrl.addGroup = function() {
+            ctrl.cardGroups.push({
+                name: `Cards ${ctrl.cardGroups.length + 1}`,
+                cards: []
+            });
+        }
 
         ctrl.cardGroups = [
             {
@@ -1458,13 +1532,10 @@
 
         ctrl.verify = function () {
             ctrl.confirm.confirm(ctrl.otp).then(d => {
-                console.log("Success");
+                $rootScope.Auth.verifyPhone();
             }).catch(d => {
                 ctrl.verifyFailed = true;
-            })
-            // $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
-            //     ctrl.verifyFailed = true;
-            // });
+            });
         }
     }
 
