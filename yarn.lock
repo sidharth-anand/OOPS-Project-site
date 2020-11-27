@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@interactjs/types@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.10.0.tgz#c2232ed3ba503891349912fa74aa05aa467403e9"
+  integrity sha512-TB4uHd++aXqiWHQNzERcP8cxOLHCd+b3fq0XoV7Ydnappoq25R8iIrrB8Yb2FqVkZXnj1SIFYnzpol1SYHFIMQ==
+
 "@uirouter/core@6.0.6":
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-6.0.6.tgz#4bea0ca88790a939d8e84ba05a31b96f50d9abe8"
@@ -39,6 +44,15 @@ angular-animate@^1.8.2:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.8.2.tgz#a3045e523ffb8d7fcbebd3cb68d1fdd474665ced"
   integrity sha512-Jbr9+grNMs9Kj57xuBU3Ju3NOPAjS1+g2UAwwDv7su1lt0/PLDy+9zEwDiu8C8xJceoTbmBNKiWGPJGBdCQLlA==
 
+angular-bootstrap-calendar@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/angular-bootstrap-calendar/-/angular-bootstrap-calendar-1.0.0.tgz#cfe87751aac33bf175bef0d3146e56f09444b52d"
+  integrity sha512-Tm9LwUl7paHRsd4P28QI558VuJSbKiFDx36ytWviNcw2gKQUYS94IWGFyIsaFuuodY249wGLVYbHCblOAz65fg==
+  optionalDependencies:
+    angular-touch ">=1.3.0"
+    angular-ui-bootstrap ">=0.14.0"
+    interactjs "^1.2.0"
+
 angular-bootstrap-contextmenu@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/angular-bootstrap-contextmenu/-/angular-bootstrap-contextmenu-1.2.1.tgz#51d627ed0886e2afc49e3578f474204caf89ca72"
@@ -64,7 +78,12 @@ angular-sanitize@^1.8.2:
   resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.8.2.tgz#ae78040f00c5e2ce1c63780bcc47fa14a1698296"
   integrity sha512-OB6Goa+QN3byf5asQ7XRl7DKZejm/F/ZOqa9z1skqYVOWA2hoBxoCmt9E7+i7T/TbxZP5zYzKxNZVVJNu860Hg==
 
-angular-ui-bootstrap@^2.5.6:
+angular-touch@>=1.3.0:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/angular-touch/-/angular-touch-1.8.2.tgz#56c54df3f776246bb36f16bef2720a93ed5b8441"
+  integrity sha512-tGoFNsONm/VHFcBW8gySVZvpCIYAvsAlEuHpJDugGn+3ENLxSDhpZ4ikev4KXfWr8ZNsYGoVSfsvJegkiC+9Ig==
+
+angular-ui-bootstrap@>=0.14.0, angular-ui-bootstrap@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.6.tgz#23937322ec641a6fbee16498cc32452aa199e7c5"
   integrity sha512-yzcHpPMLQl0232nDzm5P4iAFTFQ9dMw0QgFLuKYbDj9M0xJ62z0oudYD/Lvh1pWfRsukiytP4Xj6BHOSrSXP8A==
@@ -226,7 +245,16 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-bootstrap@^4.5.3:
+bootstrap-input-spinner@^1.16.8:
+  version "1.16.8"
+  resolved "https://registry.yarnpkg.com/bootstrap-input-spinner/-/bootstrap-input-spinner-1.16.8.tgz#397c61b0e0c803d9e5ca16196e3fa91251443b1a"
+  integrity sha512-7VFHIwrWeSyNg+bHy3cpc4Pir1+nfhTeM47GhbgdLSmCI+xtn4cmccums/IPk3YBRv/zz5heFG1u9U7jT8DuUQ==
+  dependencies:
+    bootstrap "^4.5.2"
+    jquery "^3.5.1"
+    popper.js "^1.16.1"
+
+bootstrap@^4.5.2, bootstrap@^4.5.3:
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.3.tgz#c6a72b355aaf323920be800246a6e4ef30997fe6"
   integrity sha512-o9ppKQioXGqhw8Z7mah6KdTYpNQY//tipnkxppWhPbiSWdD+1raYsnhwEZjkTHYbGee4cVQ0Rx65EhOY/HNLcQ==
@@ -1371,6 +1399,13 @@ ini@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+
+interactjs@^1.2.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.10.0.tgz#0fafd725b1fddfc9671cacd98c4f92ceae73a197"
+  integrity sha512-dblDEizs758xETNVoSSxcZiwrP0DmFeNKILeDfhmO13LQRIsnSvbJFEYerEBVeH5m9qsOyYeMgBTafA+ZKkyBg==
+  dependencies:
+    "@interactjs/types" "1.10.0"
 
 interpret@~1.1.0:
   version "1.1.0"

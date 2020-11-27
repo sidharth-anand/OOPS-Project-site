@@ -22,7 +22,8 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has decided to share meeting on "+ ctrl.data.meeting.date +" at "+ctrl.data.meeting.time+
+                    ".\n The url for the meeting is " + ctrl.data.meeting.link +".\n Additional details: "+ ctrl.data.meeting.documents
                 }
             }
         }

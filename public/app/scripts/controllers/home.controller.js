@@ -11,7 +11,14 @@
 
         ctrl.cardGroups = cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
 
-        /*ctrl.cardGroups = [
+        ctrl.addGroup = function() {
+            ctrl.cardGroups.push({
+                name: `Cards ${ctrl.cardGroups.length + 1}`,
+                cards: []
+            });
+        }
+
+        ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -39,7 +46,12 @@
                     {
                         name: "Meeting Card",
                         type: "Meeting",
-                        meeting: {}
+                        meeting: {
+                            date: Date.now(),
+                            time: Date.now(),
+                            link: "https://asd.com/qwe-123-asd",
+                            documents:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                        }
                     },
                     {
                         name: "Grocery stock Card",
@@ -49,8 +61,9 @@
                     {
                         name: "Grocery refill Card",
                         type: "Grocery refill",
+                        startDate: new Date(),
                         refill: [],
-                        refillFreq: {}
+                        refillFreq: []
                     }
                 ]
             },
@@ -64,7 +77,7 @@
                     },
                 ]
             }
-        ];*/
+        ];
     }
 
 })();

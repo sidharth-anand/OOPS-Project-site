@@ -1,13 +1,16 @@
 <div class="container-fluid h-100">
     <div class="h-100 d-flex justify-content-center">
         <div class="d-flex flex-column align-items-center justify-content-center">
-            <h5 class="font-w400 mx-auto">OTP has been sent to <b>{{phoneVerifyController.phone}}</b></h5>
+            <h5 class="font-w400 mx-auto" ng-show="phoneVerifyController.otpsent">OTP has been sent to <b>{{phoneVerifyController.phone}}</b></h5>
+            <h5 class="font-w400 mx-auto" ng-hide="phoneVerifyController.otpsent">Sending OTP to <b>{{phoneVerifyController.phone}}</b></h5>
             <div class="w-25 mx-auto mt-2">
                 <div otp-input-directive options="phoneVerifyController.otpOptions"></div>
             </div>
             <div class="col-md-2 mt-3">
-                <button class="btn btn-outline-success btn-block">Verify</button>
+                <button class="btn btn-outline-success btn-block" ng-click="phoneVerifyController.sendOTP()" ng-hide="phoneVerifyController.otpsent" id="send-otp">Send OTP</button>
+                <button class="btn btn-outline-success btn-block" ng-click="phoneVerifyController.verify()" ng-show="phoneVerifyController.otpsent">Verify</button>
             </div>
+            <span class="mt-2 text-danger" ng-show="phoneVerifyController.verifyFailed">There was an error in verifying your phone number</span>
         </div>
     </div>
 </div>

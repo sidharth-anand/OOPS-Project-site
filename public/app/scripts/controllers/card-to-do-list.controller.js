@@ -18,9 +18,12 @@
                 cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
+                let tasks = "";
+                tasks = ctrl.data.list.map(d => d.todoText).join("\n");
+                console.log(tasks);
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User wants to share the following tasks: \n" + tasks
                 }
             }
         }

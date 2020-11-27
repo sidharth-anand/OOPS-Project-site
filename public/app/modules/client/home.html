@@ -1,9 +1,14 @@
 <section class="container-fluid h-100">
-    <div class="row h-100 px-3 align-items-baseline">
-        <ul dnd-list="homeController.cardGroups" dnd-allowed-types="['group']" dnd-external-sources="true">
-        <li ng-repeat="group in homeController.cardGroups" dnd-draggable="group" dnd-type="'group'" dnd-moved="homeController.cardGroups.splice($index,1)" dnd-effect-allowed="move">
-        <card-group data="group"></card-group>
-        </li>
-        </ul>
+    <div class="row h-100 px-3 align-items-baseline" dnd-list="homeController.cardGroups" dnd-allowed-types="['group']"
+        dnd-external-sources="true">
+        <card-group data="group" ng-repeat="group in homeController.cardGroups" dnd-draggable="group" dnd-type="'group'"
+            dnd-moved="homeController.cardGroups.splice($index,1)" dnd-effect-allowed="move"></card-group>
+        <div class="dndPlaceholder card-column-placeholder col-md-2 card-column my-3 pt-2 pb-3 px-0 mx-2">
+        </div>
+        <div class="add-group col-md-2 card-column my-3 pt-2 pb-3 px-0 mx-2 text-center">
+            <a href="" ng-click="homeController.addGroup()">
+                <h3 class="mb-0 text-light font-w200">Add Group</h3>
+            </a>
+        </div>
     </div>
 </section>
