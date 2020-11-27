@@ -722,6 +722,15 @@
         ctrl.data = $scope.groupData;
         ctrl.groupInfo = {name: ctrl.data.name};
 
+        ctrl.contextMenuOptions = [
+            {
+                text: "Delete",
+                click: function($itemScope, $event) {
+                    angular.element($event.delegateTarget).remove();
+                }
+            }
+        ]
+
         $scope.$watch(function() {
             return ctrl.data.name;
         }, function(newName) {
