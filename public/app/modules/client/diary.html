@@ -1,0 +1,22 @@
+<section class="container-fluid h-100 py-5">
+    <div class="row mb-4  px-5">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light mr-5" mwl-date-modifier decrement="diaryController.calendarOptions.calendarView" date="diaryController.calendarOptions.viewDate">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h4 class="text-light">{{diaryController.getCurrentDate() | date: 'MMM yyyy'}}</h4>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light ml-5" mwl-date-modifier increment="diaryController.calendarOptions.calendarView" date="diaryController.calendarOptions.viewDate">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row align-items-center px-5">
+        <div class="col-md-6 col-sm-12">
+            <mwl-calendar view="diaryController.calendarOptions.calendarView" events="diaryController.calendarOptions.events" on-timespan-click="diaryController.changeDate(calendarDate)" cell-is-open="false" view-date="diaryController.calendarOptions.viewDate"></mwl-calendar>
+        </div>
+        <div class="col-md-6 align-self-stretch diary-entry-column px-3 py-4">
+            <h3 class="text-light mb-4" contenteditable="false" ng-contenteditable ng-model="diaryController.data[diaryController.getDiaryInfo()].heading"></h3>
+            <p class="text-light" contenteditable="false" ng-contenteditable ng-model="diaryController.data[diaryController.getDiaryInfo()].text"></p>
+        </div>
+    </div>
+</section>

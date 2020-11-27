@@ -17,7 +17,8 @@
         'angular-jwt',
         'otpInputDirective',
         'angularjs-dropdown-multiselect',
-        'dndLists'
+        'dndLists',
+        'mwl.calendar',
     ]);
 
     // // Router configuration
@@ -78,6 +79,12 @@
                 data: {
                     unAuth: true
                 }
+            })
+            .state("diary", {
+                url: '/diary',
+                templateUrl: 'app/modules/client/diary.html',
+                controller: "diaryController",
+                controllerAs: "diaryController",
             });
     }
 
@@ -395,12 +402,11 @@
 
                     $localStorage.access_token = d.data.access_token;
                     $localStorage.refresh_token = d.data.refresh_token;
-
-                    userLoggedIn = true;
                     
                     $rootScope.$broadcast(AuthEvents.loginSuccess);
 
-                    console.log(d);
+                    userDetails.phoneVerified = true;
+                    userDetails.emailVerified = true;
                 }).catch(d => {
                     userDetails.username = creds.username;
                     enteredPassword = creds.password;
@@ -435,6 +441,12 @@
                 let req = $http.post(serverPath + "/register", details);
                 req.then(d => {
                     if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
+                        this.login({
+                            username: details.username,
+                            password: details.password
+                        }).then(d => {
+                            $state.go("home");
+                        })
                     }
                 });
                 return req;
@@ -453,12 +465,8 @@
 
                 return req;
             },
-            sendOTP: function() {
-                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
-                return req;
-            },
-            verifyOTP: function(otp) {
-                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+            verifyPhone: function() {
+                let req = $http.get(serverPath + "/phone_confirm/" + userDetails.phone);
                 
                 req.then(d => {
                     this.login({
@@ -475,12 +483,11 @@
                 let logged =  $localStorage.access_token && $localStorage.refresh_token && !this.isTokenExpired();
                 
                 userLoggedIn = logged;
-                userDetails.emailVerified = true;
-                userDetails.phoneVerified = true;
+                if (logged) {
+                    userDetails.emailVerified = true;
+                    userDetails.phoneVerified = true;
+                }
                 
-                console.log(logged);
-                console.log($localStorage.access_token, $localStorage.refresh_token, this.isTokenExpired());
-
                 return logged;
             },
             checkUniqueUsername: function(name) {
@@ -513,6 +520,25 @@
             },
             getAccessToken: function() {
                 return $localStorage.access_token;
+            },
+            logout: function() {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + this.getAccessToken();
+                let req = $http.post(serverPath + "/logout");
+                req.then(d => {
+                    $localStorage.$reset();
+
+                    userLoggedIn = false;
+                    userDetails.emailVerified = false;
+                    userDetails.phoneVerified = false;
+                    userDetails.username = "";
+                    userDetails.email = "";
+                    userDetails.phone = "";
+                    userDetails.password = "";
+
+                    $state.go("login");
+                })
+
+                return req;
             }
         }
     }
@@ -536,9 +562,9 @@
                     return transition.router.stateService.target('home');
                 }
 
-                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                //     return transition.router.stateService.target(Auth.getRedirectStage());
-                // }
+                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                    return transition.router.stateService.target(Auth.getRedirectStage());
+                }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');

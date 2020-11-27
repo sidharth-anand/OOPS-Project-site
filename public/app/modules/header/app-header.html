@@ -8,5 +8,16 @@
         <div class="col-md-6">
             <h2 class="text-center">Title</h2>
         </div>
+        <div class="col-md-1 offset-2 px-2 text-center" ng-hide="headerController.hideExtra">
+            <img src="img/avatar.png" class="img-avatar img-avatar32">
+            <div class="dropdown d-inline" uib-dropdown is-open="headerController.dropdownstatus.isopen" auto-close="always">
+                <a class="text-light ml-2" uib-dropdown-toggle href=""></a>
+                <ul class="dropdown-menu dropdown-menu-left mt-3 text-center" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li role="menuitem">
+                        <a class="w-100 d-inline-block" href="" ng-click="headerController.logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </header>

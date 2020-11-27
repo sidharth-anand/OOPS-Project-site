@@ -538,6 +538,9 @@ a.bg-muted:focus {
 .bg-primary {
   background-color: #5c90d2;
 }
+.bg-secondary {
+  background-color: #2f2f2f !important;
+}
 .bg-material-teal {
     background-color: #009688 !important;
 }
@@ -2045,13 +2048,16 @@ a.list-group-item:focus {
    background:#2f2f2f;
    color:#f2f2f2;
 }
+.dropdown-menu-left {
+  transform:translateX(-75%);
+}
 .dropdown-menu > li > a {
   padding: 7px 12px;
-  color:#f2f2f2;
+  color:#f2f2f2 !important;
 }
 .dropdown-menu > li > a:hover {
   background-color: #f2f2f2;
-  color:#2f2f2f;
+  color:#2f2f2f !important;
 }
 .dropdown-menu > li > a i.pull-right,
 .dropdown-menu > li > a .badge.pull-right {
@@ -6894,11 +6900,11 @@ a.block.block-link-hover3:active {
 .nav-main a {
   display: block;
   padding: 10px 20px;
-  color: #f2f2f233
+  color: #f2f2f233 !important;
 }
 .nav-main a:hover,
 .nav-main a:focus {
-  color: #f2f2f288;
+  color: #f2f2f288 !important;
   background-color: #222222;
 }
 .nav-main a:hover > i,
@@ -6908,11 +6914,11 @@ a.block.block-link-hover3:active {
 .nav-main a.active,
 .nav-main a.active:hover {
   background-color: #2f2f2f;
-  color: #f2f2f2;
+  color: #f2f2f2 !important;
 }
 .nav-main a.active > i,
 .nav-main a.active:hover > i {
-  color: #f2f2f2;
+  color: #f2f2f2 !important;
 }
 .nav-main a > i {
   display: inline-block;
@@ -14348,8 +14354,30 @@ table tr a:hover{
   background-color: #3C3C3C;
 }
 
+.add-card {
+  background-color: #3c3c3c77;
+  min-height:50px;
+  justify-content: space-evenly;
+}
+
+.add-card > button > i {
+  opacity:0.5;
+}
+
+.add-card > button:hover > i {
+  opacity:1;
+}
+
 .card-column {
   background-color: #2F2F2F;
+}
+
+.add-group {
+  opacity:0.6;
+}
+
+.add-group:hover {
+  opacity:0.8;
 }
 
 .dndPlaceholder.card-column-placeholder {
@@ -14405,17 +14433,17 @@ table tr a:hover{
   padding-top:0;
   padding-bottom: 0;
   cursor:pointer;
-  color:#f2f2f2;
+  color:#f2f2f2 !important;
 }
 
 .multiselect-parent .dropdown-menu > li > a.option:hover {
   background-color: #f2f2f2;
-  color:#2f2f2f;
+  color:#2f2f2f !important;
 }
 
 .multiselect-parent .dropdown-menu > li.active > a.option {
   background-color:#f2f2f2;
-  color:#2f2f2f;
+  color:#2f2f2f !important;
 }
 
 .custom-number-input .input-group-prepend .btn, .custom-number-input .input-group-append .btn {
@@ -14429,4 +14457,13 @@ table tr a:hover{
 
 .open .dropdown-menu {
   display:block;
+}
+
+.diary-entry-column {
+  background-color:#2f2f2f;
+  margin-top: 1.6%;
+}
+
+input[id*="otpInput"] {
+  color:#f2f2f2 !important;
 }
