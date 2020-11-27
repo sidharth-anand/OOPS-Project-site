@@ -402,12 +402,11 @@
 
                     $localStorage.access_token = d.data.access_token;
                     $localStorage.refresh_token = d.data.refresh_token;
-
-                    userLoggedIn = true;
                     
                     $rootScope.$broadcast(AuthEvents.loginSuccess);
 
-                    console.log(d);
+                    userDetails.phoneVerified = true;
+                    userDetails.emailVerified = true;
                 }).catch(d => {
                     userDetails.username = creds.username;
                     enteredPassword = creds.password;
@@ -521,6 +520,25 @@
             },
             getAccessToken: function() {
                 return $localStorage.access_token;
+            },
+            logout: function() {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + this.getAccessToken();
+                let req = $http.post(serverPath + "/logout");
+                req.then(d => {
+                    $localStorage.$reset();
+
+                    userLoggedIn = false;
+                    userDetails.emailVerified = false;
+                    userDetails.phoneVerified = false;
+                    userDetails.username = "";
+                    userDetails.email = "";
+                    userDetails.phone = "";
+                    userDetails.password = "";
+
+                    $state.go("login");
+                })
+
+                return req;
             }
         }
     }
