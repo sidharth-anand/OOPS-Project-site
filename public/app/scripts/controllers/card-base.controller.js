@@ -58,10 +58,7 @@
                         if(navigator.share) {
                             navigator.share(shareData);
                         } else {
-                            let maillink = angular.element(`<a href="mailto:x@x.com?subject=${shareData.title}&amp;body=${shareData.text}">Link</a>`);
-                            maillink.appendTo("body");
-                            maillink.trigger("click");
-                            console.log(maillink);
+                            window.open(`mailto:john@doe,com?subject=${shareData.title}&amp;body=${shareData.text}`)
                         }
                     }
                 }
