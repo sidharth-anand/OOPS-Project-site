@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-26 */
+/*! oops-site 2020-11-27 */
 
 (function () {
     'use strict';
@@ -467,12 +467,8 @@
 
                 return req;
             },
-            sendOTP: function() {
-                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
-                return req;
-            },
-            verifyOTP: function(otp) {
-                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+            verifyPhone: function() {
+                let req = $http.get(serverPath + "/phone_confirm/" + userDetails.phone);
                 
                 req.then(d => {
                     this.login({
@@ -1458,13 +1454,10 @@
 
         ctrl.verify = function () {
             ctrl.confirm.confirm(ctrl.otp).then(d => {
-                console.log("Success");
+                $rootScope.Auth.verifyPhone();
             }).catch(d => {
                 ctrl.verifyFailed = true;
-            })
-            // $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
-            //     ctrl.verifyFailed = true;
-            // });
+            });
         }
     }
 

@@ -466,12 +466,8 @@
 
                 return req;
             },
-            sendOTP: function() {
-                let req = $http.get(serverPath + "/send_otp/" + userDetails.phone);
-                return req;
-            },
-            verifyOTP: function(otp) {
-                let req = $http.get(serverPath + "/otp_confirm/" + otp);
+            verifyPhone: function() {
+                let req = $http.get(serverPath + "/phone_confirm/" + userDetails.phone);
                 
                 req.then(d => {
                     this.login({

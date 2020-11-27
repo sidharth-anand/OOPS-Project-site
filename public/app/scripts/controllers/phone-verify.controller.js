@@ -41,13 +41,10 @@
 
         ctrl.verify = function () {
             ctrl.confirm.confirm(ctrl.otp).then(d => {
-                console.log("Success");
+                $rootScope.Auth.verifyPhone();
             }).catch(d => {
                 ctrl.verifyFailed = true;
-            })
-            // $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
-            //     ctrl.verifyFailed = true;
-            // });
+            });
         }
     }
 
