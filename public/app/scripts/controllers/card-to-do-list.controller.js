@@ -17,9 +17,12 @@
                 });
             },
             getShareData: () => {
+                let tasks = "";
+                tasks = ctrl.data.list.map(d => d.todoText).join("\n");
+                console.log(tasks);
                 return {
                     title: ctrl.data.name,
-                    list: ctrl.data.list
+                    text: "User wants to share the following tasks: \n" + tasks
                 }
             }
         }

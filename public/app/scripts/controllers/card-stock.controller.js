@@ -17,9 +17,13 @@
                 });
             },
             getShareData: () => {
+                let inventoryDetails = "";
+                ctrl.data.inventory.forEach(function(x){
+                    let items = "Item - "+ x.item + " Quantity - " + x.quantity + "\n"
+                })
                 return {
                     title: ctrl.data.name,
-                    inventory: ctrl.data.inventory
+                    text: "User has shared the following inventory details: \n" + inventoryDetails
                 }
             }
         }

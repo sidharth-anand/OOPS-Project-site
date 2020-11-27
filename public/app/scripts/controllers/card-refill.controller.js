@@ -17,11 +17,15 @@
                 });
             },
             getShareData: () => {
+                let itemDetails = "";
+                ctrl.data.refill.forEach(function(x){
+                    itemDetails.concat("Item - "+x.item + "Quantity - " + x.quantity + "\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    refill: ctrl.data.refill,
-                    refillFreq: ctrl.data.refillFreq,
-                    startDate: ctrl.data.startDate
+                    text: "User has shared the scheduled refill of these items into the inventory: \n"+
+                    "Starting from "+ ctrl.data.startDate + "\n"+
+                    "With frequency set as: "+ ctrl.data.refillFreq
                 }
             }
         }
