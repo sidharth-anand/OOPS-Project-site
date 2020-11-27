@@ -1353,6 +1353,13 @@
     function homeController($rootScope) {
         let ctrl = this;
 
+        ctrl.addGroup = function() {
+            ctrl.cardGroups.push({
+                name: `Cards ${ctrl.cardGroups.length + 1}`,
+                cards: []
+            });
+        }
+
         ctrl.cardGroups = [
             {
                 name: "Cards 1",
