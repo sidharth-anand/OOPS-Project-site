@@ -799,7 +799,8 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has decided to share meeting on "+ ctrl.data.meeting.date +" at "+ctrl.data.meeting.time+
+                    ".\n The url for the meeting is " + ctrl.data.meeting.link +".\n Additional details: "+ ctrl.data.meeting.documents
                 }
             }
         }
@@ -851,9 +852,15 @@
                 });
             },
             getShareData: () => {
+                let itemDetails = "";
+                ctrl.data.refill.forEach(function(x){
+                    itemDetails.concat("Item - "+x.item + "Quantity - " + x.quantity + "\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the scheduled refill of these items into the inventory: \n"+
+                    "Starting from "+ ctrl.data.startDate + "\n"+
+                    "With frequency set as: "+ ctrl.data.refillFreq
                 }
             }
         }
@@ -990,9 +997,13 @@
                 });
             },
             getShareData: () => {
+                let reminderDetails = "";
+                ctrl.data.reminderList.forEach(function(x){
+                    reminderDetails.concat("Date - " + x.date + " Time - " + x.time +"\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared these reminder details with you: \n" + reminderDetails
                 }
             }
         }
@@ -1067,9 +1078,13 @@
                 });
             },
             getShareData: () => {
+                let inventoryDetails = "";
+                ctrl.data.inventory.forEach(function(x){
+                    let items = "Item - "+ x.item + " Quantity - " + x.quantity + "\n"
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the following inventory details: \n" + inventoryDetails
                 }
             }
         }
@@ -1170,7 +1185,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared this text with you: "+ctrl.data.text
                 }
             }
         }
@@ -1247,9 +1262,12 @@
                 });
             },
             getShareData: () => {
+                let tasks = "";
+                tasks = ctrl.data.list.map(d => d.todoText).join("\n");
+                console.log(tasks);
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User wants to share the following tasks: \n" + tasks
                 }
             }
         }

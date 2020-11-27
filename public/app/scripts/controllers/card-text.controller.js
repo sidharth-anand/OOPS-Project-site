@@ -19,7 +19,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared this text with you: "+ctrl.data.text
                 }
             }
         }

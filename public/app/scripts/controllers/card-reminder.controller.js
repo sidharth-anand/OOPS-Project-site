@@ -17,9 +17,13 @@
                 });
             },
             getShareData: () => {
+                let reminderDetails = "";
+                ctrl.data.reminderList.forEach(function(x){
+                    reminderDetails.concat("Date - " + x.date + " Time - " + x.time +"\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared these reminder details with you: \n" + reminderDetails
                 }
             }
         }
