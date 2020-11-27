@@ -19,7 +19,9 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    refill: ctrl.data.refill,
+                    refillFreq: ctrl.data.refillFreq,
+                    startDate: ctrl.data.startDate
                 }
             }
         }

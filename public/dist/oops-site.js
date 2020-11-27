@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-24 */
+/*! oops-site 2020-11-27 */
 
 (function () {
     'use strict';
@@ -724,7 +724,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    meeting: ctrl.data.meeting
                 }
             }
         }
@@ -778,7 +778,9 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    refill: ctrl.data.refill,
+                    refillFreq: ctrl.data.refillFreq,
+                    startDate: ctrl.data.startDate
                 }
             }
         }
@@ -917,7 +919,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    reminderList: ctrl.data.reminderList
                 }
             }
         }
@@ -994,7 +996,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    inventory: ctrl.data.inventory
                 }
             }
         }
@@ -1174,7 +1176,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    list: ctrl.data.list
                 }
             }
         }

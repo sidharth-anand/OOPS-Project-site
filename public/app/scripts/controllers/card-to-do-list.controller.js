@@ -19,7 +19,7 @@
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    list: ctrl.data.list
                 }
             }
         }
