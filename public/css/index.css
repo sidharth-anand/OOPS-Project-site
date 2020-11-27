@@ -14354,6 +14354,20 @@ table tr a:hover{
   background-color: #3C3C3C;
 }
 
+.add-card {
+  background-color: #3c3c3c77;
+  min-height:55px;
+  justify-content: space-evenly;
+}
+
+.add-card > button > i {
+  opacity:0.5;
+}
+
+.add-card > button:hover > i {
+  opacity:1;
+}
+
 .card-column {
   background-color: #2F2F2F;
 }

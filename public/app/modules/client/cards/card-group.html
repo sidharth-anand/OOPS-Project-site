@@ -1,4 +1,4 @@
-<div class="col-md-2 card-column my-3 pt-2 pb-3 px-0 mx-2">
+<div class="col-md-2 card-column my-3 pt-2 pb-3 px-0 mx-2" context-menu="cardGroupController.contextMenuOptions">
     <h3 class="ml-2 mb-3" contenteditable="true" ng-contenteditable ng-model="cardGroupController.data.name"></h3>
     <div class="card-column-list" dnd-list="cardGroupController.data.cards" dnd-allowed-types="['card']" dnd-external-sources="true">
         <div ng-repeat="card in cardGroupController.data.cards" dnd-draggable="card" dnd-type="'card'" dnd-moved="cardGroupController.data.cards.splice($index,1)" dnd-effect-allowed="move">
@@ -15,6 +15,14 @@
                 <card-refill ng-switch-when="Grocery refill" data="card" group="cardGroupController.groupInfo">
                 </card-refill>
             </div>
+        </div>
+        <div class="mx-2 mt-2 px-1 py-2 add-card d-flex align-items-center">
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('text')"><i class="fas fa-align-left"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('reminder')"><i class="fas fa-bell"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('todo')"><i class="fas fa-check-square"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('meeting')"><i class="fas fa-handshake"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('stock')"><i class="fas fa-carrot"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('refill')"><i class="fas fa-sync"></i></button>
         </div>
     </div>
 </div>
