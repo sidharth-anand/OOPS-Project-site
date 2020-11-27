@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-24 */
+/*! oops-site 2020-11-26 */
 
 (function () {
     'use strict';
@@ -18,7 +18,8 @@
         'angular-jwt',
         'otpInputDirective',
         'angularjs-dropdown-multiselect',
-        'dndLists'
+        'dndLists',
+        'mwl.calendar',
     ]);
 
     // // Router configuration
@@ -79,6 +80,12 @@
                 data: {
                     unAuth: true
                 }
+            })
+            .state("diary", {
+                url: '/diary',
+                templateUrl: 'app/modules/client/diary.html',
+                controller: "diaryController",
+                controllerAs: "diaryController",
             });
     }
 
@@ -436,6 +443,12 @@
                 let req = $http.post(serverPath + "/register", details);
                 req.then(d => {
                     if(d.data && d.data.msg && d.data.msg.indexOf("error") == -1) {
+                        this.login({
+                            username: details.username,
+                            password: details.password
+                        }).then(d => {
+                            $state.go("home");
+                        })
                     }
                 });
                 return req;
@@ -476,12 +489,11 @@
                 let logged =  $localStorage.access_token && $localStorage.refresh_token && !this.isTokenExpired();
                 
                 userLoggedIn = logged;
-                userDetails.emailVerified = true;
-                userDetails.phoneVerified = true;
+                if (logged) {
+                    userDetails.emailVerified = true;
+                    userDetails.phoneVerified = true;
+                }
                 
-                console.log(logged);
-                console.log($localStorage.access_token, $localStorage.refresh_token, this.isTokenExpired());
-
                 return logged;
             },
             checkUniqueUsername: function(name) {
@@ -537,9 +549,9 @@
                     return transition.router.stateService.target('home');
                 }
 
-                // if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
-                //     return transition.router.stateService.target(Auth.getRedirectStage());
-                // }
+                if(!Auth.isUserVerified() && !(transition.to().data && transition.to().data.unAuth)) {
+                    return transition.router.stateService.target(Auth.getRedirectStage());
+                }
 
                 if(!Auth.isLoggedIn() && !(transition.to().name == 'login' || transition.to().name =='register')) {
                     return transition.router.stateService.target('login');
@@ -1189,6 +1201,86 @@
 
     let App = angular.module("app");
 
+    App.controller("diaryController", diaryController);
+    diaryController.$inject = ["$transitions"];
+
+    function diaryController($transitions) {
+        let ctrl = this;
+
+        ctrl.calendarOptions = {
+            calendarView: "month",
+            viewDate: moment(),
+            viewTitle: "Your Diary",
+            events: [],
+            selectedDate: new Date()
+        }
+
+        ctrl.dummy = "Your diary entry";
+
+        ctrl.original = [
+            {
+                date: new Date(moment().hour(0).minutes(0).seconds(0).milliseconds(0)),
+                heading: "Lorem",
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            },
+            {
+                date: new Date(moment().hour(0).minutes(0).seconds(0).milliseconds(0).subtract(1, "day")),
+                heading: "Ipsum dolor",
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            }
+        ];
+
+        ctrl.data = JSON.parse(JSON.stringify(ctrl.original));
+
+        ctrl.getCurrentDate = function() {
+            return new Date(ctrl.calendarOptions.viewDate);
+        }
+
+        ctrl.changeDate = function(calendarDate) {
+            ctrl.calendarOptions.selectedDate = calendarDate;
+        }
+
+        ctrl.findDateIndex = function(dateArray, target) {
+            for(let i= 0; i < dateArray.length; i++) {
+                if(moment.duration(moment(dateArray[i]).diff(moment(target))).days() == 0) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        ctrl.getDiaryInfo = function() {
+            let index = ctrl.findDateIndex(ctrl.data.map(d => d.date), ctrl.calendarOptions.selectedDate);
+            if(index != -1)
+                return index;
+
+            ctrl.data.push({
+                date: new Date(ctrl.calendarOptions.selectedDate),
+                heading: moment(ctrl.calendarOptions.selectedDate).format("MMMM Do"),
+                text: "Your diary entry"
+            });
+            return ctrl.data.length - 1;
+        }
+
+        $transitions.onBefore({from: "diary"}, transition => {
+            for(let i = 0; i < ctrl.data.length; i++) {
+                let index = ctrl.findDateIndex(ctrl.original.map(d => d.date), ctrl.data[i].date)
+                if(index == -1) {
+                    console.log(`Data added for ${ctrl.data[i].date}`);
+                } else if(JSON.stringify(ctrl.data[i]) != JSON.stringify(ctrl.original[i])) {
+                    console.log(`Data changed for ${ctrl.data[i].date}`);
+                }
+            }
+        });
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("headerController", headerController);
     headerController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$transitions'];
 
@@ -1323,19 +1415,20 @@
     }   
 
 })();;
-(function(){
+(function () {
     'use strict';
 
     let App = angular.module("app");
 
     App.controller("phoneVerifyController", phoneVerifyController);
-    phoneVerifyController.$inject = ["$rootScope"];
+    phoneVerifyController.$inject = ["$rootScope", "$timeout"];
 
-    function phoneVerifyController($rootScope) {
+    function phoneVerifyController($rootScope, $timeout) {
         let ctrl = this;
 
         ctrl.otp = "";
         ctrl.verifyFailed = false;
+        ctrl.otpsent = false;
 
         ctrl.otpOptions = {
             size: 6,
@@ -1348,14 +1441,30 @@
             }
         }
 
-        $rootScope.Auth.sendOTP();
+        //$rootScope.Auth.sendOTP();
+        ctrl.confirm - null;
+        ctrl.sendOTP = function () {
+            firebase.auth().signInWithPhoneNumber($rootScope.Auth.getUserDetails().phone, new firebase.auth.RecaptchaVerifier('send-otp', {
+                'size': 'invisible',
+            })).then((confirmationResult) => {
+                    ctrl.confirm = confirmationResult;
+                    $timeout(() => {
+                        ctrl.otpsent = true;
+                    });
+            });
+        }
 
         ctrl.phone = $rootScope.Auth.getUserDetails().phone;
 
-        ctrl.verify = function() {
-            $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
+        ctrl.verify = function () {
+            ctrl.confirm.confirm(ctrl.otp).then(d => {
+                console.log("Success");
+            }).catch(d => {
                 ctrl.verifyFailed = true;
-            });
+            })
+            // $rootScope.Auth.verifyOTP(ctrl.otp).catch(d => {
+            //     ctrl.verifyFailed = true;
+            // });
         }
     }
 
