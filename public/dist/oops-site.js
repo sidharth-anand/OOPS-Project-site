@@ -762,6 +762,7 @@
                     newcard.refill = [];
                     newcard.refillFreq = [];
                     newcard.startDate = new Date();
+                    newcard.cardid = [];
                     break;
             }
 
@@ -860,7 +861,7 @@
     }
 
 })();;
-(function(){
+(function () {
     'use strict';
 
     let App = angular.module("app");
@@ -901,7 +902,7 @@
             label: "Curd"
         }]
 
-        
+
         ctrl.selectedModel = [];
         ctrl.searchSettings = {
             enableSearch: true,
@@ -926,7 +927,7 @@
             smartButtonMaxItems: 1,
         }
 
-        
+
         ctrl.frequencies = [
             {
                 "id": "1",
@@ -946,10 +947,19 @@
             }
         ];
 
-        
+        ctrl.stockCards = [
+            {
+                id: "1",
+                label: "Stock 1"
+            },
+            {
+                id: "2",
+                label: "Stock 2"
+            }
+        ]
 
-        ctrl.addToRefiller = function(){
-            angular.forEach(ctrl.selectedModel,function(x){
+        ctrl.addToRefiller = function () {
+            angular.forEach(ctrl.selectedModel, function (x) {
                 ctrl.refill.push({
                     item: x.label,
                     quantity: 1
@@ -958,11 +968,11 @@
             })
         };
 
-        ctrl.remove = function(refillItem){
-            ctrl.data.refill.splice(ctrl.data.refill.indexOf(refillItem),1);
-        };        
+        ctrl.remove = function (refillItem) {
+            ctrl.data.refill.splice(ctrl.data.refill.indexOf(refillItem), 1);
+        };
 
-        ctrl.toggleDatePopup = function(popup) {
+        ctrl.toggleDatePopup = function (popup) {
             ctrl.datePopup[popup] = !ctrl.datePopup[popup];
         }
     }
@@ -1442,7 +1452,8 @@
                         type: "Grocery refill",
                         startDate: new Date(),
                         refill: [],
-                        refillFreq: []
+                        refillFreq: [],
+                        cardid: []
                     }
                 ]
             },

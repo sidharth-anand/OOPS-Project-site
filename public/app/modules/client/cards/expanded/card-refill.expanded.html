@@ -1,6 +1,6 @@
 <div ng-controller="cardRefillExpandedController as cardRefillExpandedController">
 
-    <h5 class="text-light mb-2">Refill On</h5>
+    <h5 class="text-light mb-2">Refill Details</h5>
     <div class="form-row align-items-center">
         <div class="form-group col-6">
             <div class="input-group">
@@ -16,8 +16,11 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-6 text-left">
+        <div class="form-group col-3 text-center">
             <div ng-dropdown-multiselect="" options="cardRefillExpandedController.frequencies" selected-model="cardRefillExpandedController.data.refillFreq" extra-settings="cardRefillExpandedController.freqSettings"></div>
+        </div>
+        <div class="form-group col-3 text-center">
+            <div ng-dropdown-multiselect="" options="cardRefillExpandedController.stockCards" selected-model="cardRefillExpandedController.data.cardid" extra-settings="cardRefillExpandedController.freqSettings"></div>
         </div>
     </div>
 
