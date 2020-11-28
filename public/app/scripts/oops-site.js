@@ -392,7 +392,7 @@
         let userLoggedIn = false;
         let enteredPassword = "";
         let githubCode = "";
-        const serverPath = "http://localhost:5000";
+        const serverPath = "https://taskeasy-server.herokuapp.com";
 
         return {
             login: function(creds) {
@@ -444,10 +444,13 @@
             loginWithGithub: function(code) {
                 githubCode = code;
 
-                let req = $http.post(serverPath + "/login/github/get_code/code", {
-                    code: code
-                }).then(d => {
-                    $http.post(serverPath + "/login/github/" + d.access_token).then(success => {
+                let req = $http.post(serverPath + "/login/github/get_code/" + code).then(d => {
+                    console.log(d);
+                    if(d.data.error) {
+                        return;
+                    }
+
+                    $http.get(serverPath + "/login/github/" + d.data.access_token).then(success => {
                         userLoggedIn = true;
 
                         $localStorage.access_token = d.data.access_token;
