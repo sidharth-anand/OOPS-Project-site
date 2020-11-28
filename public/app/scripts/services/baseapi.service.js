@@ -7,9 +7,10 @@
     baseAPIService.$inject = ["$http", "$rootScope"];
 
     function baseAPIService($http, $rootScope) {
+        const serverPath = "http://localhost:5000";
         return {
             call: function(method, url, params) {
-                $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAuthToken();
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
             
                 return $http({
                     method: method,
