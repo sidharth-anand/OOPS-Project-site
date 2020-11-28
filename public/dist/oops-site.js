@@ -848,6 +848,7 @@
             {
                 text: "Delete",
                 click: function($itemScope, $event) {
+                    cardGroupsService.deleteGroup(ctrl.data.name);
                     angular.element($event.delegateTarget).remove();
                 }
             }
@@ -1546,7 +1547,16 @@
         ctrl.cardGroups = {};
         cardGroupService.getAllGroups().then(d => {
             if(Object.keys(d.data) != 0)
-                ctrl.cardGroups = d.data;
+                {
+                    let groups = [...new Set(d.data.map(d => d.group))];
+                    groups.map(d => {
+                        return {
+                            name: d,
+                            cards: d.data.filter(card => card.group == d)
+                        }
+                    });
+                    ctrl.cardGroups = groups;
+                }
             else
                 ctrl.cardGroups = new Array();
         });

@@ -16,6 +16,7 @@
             {
                 text: "Delete",
                 click: function($itemScope, $event) {
+                    cardGroupsService.deleteGroup(ctrl.data.name);
                     angular.element($event.delegateTarget).remove();
                 }
             }
