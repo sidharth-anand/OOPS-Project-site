@@ -1,7 +1,7 @@
 <div ng-controller="cardWeatherExpandedController as cardWeatherExpandedController">
     <!--<p contenteditable="false" ng-contenteditable ng-model="cardWeatherExpandedController.data.text"></p>-->
     <form ng-submit="cardWeatherExpandedController.getWeather(cardWeatherExpandedController.city)">
-    <input type="search" ng-model="cardWeatherExpandedController.city">
+    <input type="search" placeholder="Enter City" ng-model="cardWeatherExpandedController.city">
     <button type="submit">Search</button>
     </form>
     <div class="weatherBox">
