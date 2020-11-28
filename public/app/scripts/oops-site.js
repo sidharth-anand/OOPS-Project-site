@@ -391,6 +391,7 @@
 
         let userLoggedIn = false;
         let enteredPassword = "";
+        let githubCode = "";
         const serverPath = "http://localhost:5000";
 
         return {
@@ -433,6 +434,32 @@
                     } 
 
                     $rootScope.$broadcast(AuthEvents.loginFailed);
+                });
+
+                return req;
+            },
+            getGithubCode: function() {
+                window.open("https://github.com/login/oauth/authorize?client_id=f59b28f894d50689eea0&amp;redirect_uri=http://localhost:8000/#!/login&amp;state=asdfgh&amp;allow_signup=false")
+            },
+            loginWithGithub: function(code) {
+                githubCode = code;
+
+                let req = $http.post(serverPath + "whatever shit", {
+                    code: code
+                });
+                
+                req.then(d => {
+                    userLoggedIn = true;
+
+                    $localStorage.access_token = d.data.access_token;
+                    $localStorage.refresh_token = d.data.refresh_token;
+                    
+                    $rootScope.$broadcast(AuthEvents.loginSuccess);
+
+                    userDetails.phoneVerified = true;
+                    userDetails.emailVerified = true;
+                }).catch(d => {
+
                 });
 
                 return req;
@@ -576,6 +603,15 @@
 
                 if(transition.to().name == 'verify-phone' && Auth.getUserDetails().phoneVerified) {
                     return transition.router.stateService.target('home');
+                }
+            });
+
+            $transitions.onSuccess({to:"login"}, transition => {
+                let matches = /(?<=code=)[\w]+/g.exec(window.location)
+                if(matches.length) {
+                    console.log(matches[0]);
+                    //Auth.loginWithGithub(matches[0]);
+                    window.location = (window.location + "").split("?")[0] + "#!/login";
                 }
             });
 
