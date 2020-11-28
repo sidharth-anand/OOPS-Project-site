@@ -17,6 +17,7 @@
             editCardById: function(id,data) {
                 let sendData = JSON.parse(JSON.stringify(data));
                 delete sendData._id;
+                delete sendData.type;
                 return baseAPIService.call('PUT', '/cards/'+ id, sendData);
             },
             inputCard: function(cardData){

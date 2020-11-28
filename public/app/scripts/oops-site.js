@@ -444,24 +444,22 @@
             loginWithGithub: function(code) {
                 githubCode = code;
 
-                let req = $http.post(serverPath + "whatever shit", {
+                let req = $http.post(serverPath + "/login/github/get_code/code", {
                     code: code
+                }).then(d => {
+                    $http.post(serverPath + "/login/github/" + d.access_token).then(success => {
+                        userLoggedIn = true;
+
+                        $localStorage.access_token = d.data.access_token;
+                        $localStorage.refresh_token = d.data.refresh_token;
+                        
+                        $rootScope.$broadcast(AuthEvents.loginSuccess);
+    
+                        userDetails.phoneVerified = true;
+                        userDetails.emailVerified = true;
+                    });
                 });
                 
-                req.then(d => {
-                    userLoggedIn = true;
-
-                    $localStorage.access_token = d.data.access_token;
-                    $localStorage.refresh_token = d.data.refresh_token;
-                    
-                    $rootScope.$broadcast(AuthEvents.loginSuccess);
-
-                    userDetails.phoneVerified = true;
-                    userDetails.emailVerified = true;
-                }).catch(d => {
-
-                });
-
                 return req;
             },
             register: function(details) {
@@ -610,8 +608,7 @@
                 let matches = /(?<=code=)[\w]+/g.exec(window.location)
                 if(matches && matches.length) {
                     console.log(matches[0]);
-                    //Auth.loginWithGithub(matches[0]);
-                    window.location = (window.location + "").split("?")[0] + "#!/login";
+                    Auth.loginWithGithub(matches[0]);
                 }
             });
 
