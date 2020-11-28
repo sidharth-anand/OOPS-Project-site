@@ -711,9 +711,9 @@
     let App = angular.module("app");
 
     App.controller("cardBaseController", cardBaseController);
-    cardBaseController.$inject = ["$scope", "$uibModal"];
+    cardBaseController.$inject = ["$scope", "$uibModal", "cardService"];
 
-    function cardBaseController($scope, $uibModal) {
+    function cardBaseController($scope, $uibModal, cardService) {
         let ctrl = this;
 
         ctrl.cardOptions = $scope.cardOptions;
@@ -777,7 +777,7 @@
                 text: "Delete",
                 click: function($itemScope, $event) {
                     angular.element($event.delegateTarget).remove();
-                    cardService.deleteCardById(cardExpandedController.data.id)
+                    cardService.deleteCardById(ctrl.cardData._id.$oid)
                 }
             }
         ]
@@ -921,7 +921,7 @@
                     ctrl.data[d] = newData[d];
                 
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 return {
@@ -977,7 +977,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 let itemDetails = "";
@@ -1123,7 +1123,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 let reminderDetails = "";
@@ -1205,7 +1205,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 let inventoryDetails = "";
@@ -1312,12 +1312,13 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                console.log(ctrl.data);
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: "User has shared this text with you: "+ctrl.data.text
+                    text: "User has shared this text with you: " + ctrl.data.text
                 }
             }
         }
@@ -1392,7 +1393,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 let tasks = "";

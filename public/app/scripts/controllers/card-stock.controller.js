@@ -15,7 +15,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 let inventoryDetails = "";

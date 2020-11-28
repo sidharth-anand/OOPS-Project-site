@@ -15,12 +15,13 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
-                cardService.editCardById(ctrl.data.id,ctrl.data)
+                console.log(ctrl.data);
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: "User has shared this text with you: "+ctrl.data.text
+                    text: "User has shared this text with you: " + ctrl.data.text
                 }
             }
         }
