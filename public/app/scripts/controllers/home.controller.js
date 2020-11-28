@@ -13,11 +13,12 @@
         cardGroupService.getAllGroups().then(d => {
             if(Object.keys(d.data) != 0)
                 {
-                    let groups = [...new Set(d.data.map(d => d.group))];
-                    groups.map(d => {
+                    console.log(d.data);
+                    let groups = [...new Set(d.data.map(card => card.group))];
+                    groups = groups.map(groupname => {
                         return {
-                            name: d,
-                            cards: d.data.filter(card => card.group == d)
+                            name: groupname,
+                            cards: d.data.filter(card => card.group == groupname)
                         }
                     });
                     ctrl.cardGroups = groups;
