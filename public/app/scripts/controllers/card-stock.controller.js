@@ -15,11 +15,16 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let inventoryDetails = "";
+                ctrl.data.inventory.forEach(function(x){
+                    let items = "Item - "+ x.item + " Quantity - " + x.quantity + "\n"
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the following inventory details: \n" + inventoryDetails
                 }
             }
         }

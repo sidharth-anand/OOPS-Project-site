@@ -628,10 +628,128 @@
 
     let App = angular.module("app");
 
-    App.controller("cardBaseController", cardBaseController);
-    cardBaseController.$inject = ["$scope", "$uibModal"];
+    App.service("baseAPIService", baseAPIService);
+    baseAPIService.$inject = ["$http", "$rootScope"];
 
-    function cardBaseController($scope, $uibModal) {
+    function baseAPIService($http, $rootScope) {
+        const serverPath = "http://localhost:5000";
+        return {
+            call: function(method, url, params) {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
+                $http.defaults.headers.common['Content-type'] = 'application/json';
+            
+                return $http({
+                    method: method,
+                    url: serverPath + url,
+                    params: method == 'GET' ? params : {},
+                    data: method != 'GET' ? params : {},
+                });
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("cardGroupService", cardGroupService);
+    cardGroupService.$inject = ["baseAPIService"];
+
+    function cardGroupService(baseAPIService) {
+        return {
+            getAllGroups: function() {
+                return baseAPIService.call('GET', '/cards/all', {});
+            },
+            deleteGroup: function(id) {
+                return baseAPIService.call('DELETE', '/groups/'+id,{});
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("cardService", cardService);
+    cardService.$inject = ["baseAPIService"];
+
+    function cardService(baseAPIService) {
+        return {
+            getCardById: function(id) {
+                return baseAPIService.call('GET', '/cards/'+ id, {});
+            },
+            deleteCardById: function(id) {
+                return baseAPIService.call('DELETE', '/cards/'+ id, {})
+            },
+            editCardById: function(id,data) {
+                return baseAPIService.call('PUT', '/cards/'+ id, data)
+            },
+            inputCard: function(cardData){
+                return baseAPIService.call('POST', '/cards', cardData)
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("diaryService", diaryService);
+    diaryService.$inject = ["baseAPIService"];
+
+    function diaryService(baseAPIService) {
+        return {
+            diaryEntry: function(data){
+                return baseAPIService.call('POST','/diary',data);
+            },
+            getDiaryById: function(id){
+                return baseAPIService.call('GET','/diary/'+id,{});
+            },
+            editDiaryById: function(id,data){
+                return baseAPIService.call('PUT','/diary/'+id,data);
+            },
+            getAllDiaryEntries: function(){
+                return baseAPIService.call('GET','/diary/all');
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("productService", productService);
+    productService.$inject = ["baseAPIService"];
+
+    function productService(baseAPIService) {
+        return {
+            getStock: function(){
+                return baseAPIService.call('GET','/stock', {});
+            },
+            checkRefill: function(){
+                return baseAPIService.call('POST','/refill',{});
+            }
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardBaseController", cardBaseController);
+    cardBaseController.$inject = ["$scope", "$uibModal", "cardService"];
+
+    function cardBaseController($scope, $uibModal, cardService) {
         let ctrl = this;
 
         ctrl.cardOptions = $scope.cardOptions;
@@ -692,6 +810,7 @@
                 text: "Delete",
                 click: function($itemScope, $event) {
                     angular.element($event.delegateTarget).remove();
+                    cardService.deleteCardById(ctrl.cardData._id.$oid)
                 }
             }
         ]
@@ -750,9 +869,9 @@
     let App = angular.module("app");
 
     App.controller("cardGroupController", cardGroupController);
-    cardGroupController.$inject = ["$rootScope", "$scope"];
+    cardGroupController.$inject = ["$rootScope", "$scope", "cardService"];
 
-    function cardGroupController($rootScope, $scope) {
+    function cardGroupController($rootScope, $scope, cardService) {
         let ctrl = this;
 
         ctrl.data = $scope.groupData;
@@ -762,6 +881,7 @@
             {
                 text: "Delete",
                 click: function($itemScope, $event) {
+                    cardGroupsService.deleteGroup(ctrl.data.name);
                     angular.element($event.delegateTarget).remove();
                 }
             }
@@ -770,7 +890,9 @@
         ctrl.addCard = function(type) {
             let newcard = {
                 name: "Card " + (ctrl.data.cards.length + 1),
-                type: type
+                type: type,
+                category:type,
+                group: ctrl.data.name
             };
 
             switch (type) {
@@ -803,6 +925,8 @@
             }
 
             ctrl.data.cards.push(newcard);
+
+            cardService.inputCard(newcard);
         }
 
         $scope.$watch(function() {
@@ -826,14 +950,18 @@
         ctrl.options = {
             expandedSrc: "app/modules/client/cards/expanded/card-meeting.expanded.html",
             onChange: (newData) => {
+
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
+                
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has decided to share meeting on "+ ctrl.data.meeting.date +" at "+ctrl.data.meeting.time+
+                    ".\n The url for the meeting is " + ctrl.data.meeting.link +".\n Additional details: "+ ctrl.data.meeting.documents
                 }
             }
         }
@@ -883,11 +1011,18 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let itemDetails = "";
+                ctrl.data.refill.forEach(function(x){
+                    itemDetails.concat("Item - "+x.item + "Quantity - " + x.quantity + "\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the scheduled refill of these items into the inventory: \n"+
+                    "Starting from "+ ctrl.data.startDate + "\n"+
+                    "With frequency set as: "+ ctrl.data.refillFreq
                 }
             }
         }
@@ -1031,11 +1166,16 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let reminderDetails = "";
+                ctrl.data.reminderList.forEach(function(x){
+                    reminderDetails.concat("Date - " + x.date + " Time - " + x.time +"\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared these reminder details with you: \n" + reminderDetails
                 }
             }
         }
@@ -1108,11 +1248,16 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let inventoryDetails = "";
+                ctrl.data.inventory.forEach(function(x){
+                    let items = "Item - "+ x.item + " Quantity - " + x.quantity + "\n"
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the following inventory details: \n" + inventoryDetails
                 }
             }
         }
@@ -1128,14 +1273,15 @@
     let App = angular.module("app");
 
     App.controller("cardStockExpandedController", cardStockExpandedController);
-    cardStockExpandedController.$inject = ["$scope"];
+    cardStockExpandedController.$inject = ["$scope","productService"];
 
-    function cardStockExpandedController($scope) {
+    function cardStockExpandedController($scope,productService) {
         let ctrl = this;
 
         ctrl.inventory = $scope.cardExpandedController.data.inventory;
 
-        ctrl.groceriesList = [{
+        ctrl.groceriesList = productService.getStock()
+        /*ctrl.groceriesList = [{
             id: 1,
             label: "Milk"
         },
@@ -1154,7 +1300,7 @@
         {
             id: 5,
             label: "Curd"
-        }]
+        }]*/
 
         ctrl.selectedModel = [];
         ctrl.searchSettings = {
@@ -1209,11 +1355,13 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                console.log(ctrl.data);
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared this text with you: " + ctrl.data.text
                 }
             }
         }
@@ -1288,17 +1436,99 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let tasks = "";
+                tasks = ctrl.data.list.map(d => d.todoText).join("\n");
+                console.log(tasks);
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User wants to share the following tasks: \n" + tasks
                 }
             }
         }
 
         ctrl.data = $scope.data;
         ctrl.groupInfo = $scope.groupInfo;
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardWeatherController", cardWeatherController);
+    cardWeatherController.$inject = ["$scope"];
+
+    function cardWeatherController($scope) {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-weather.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: "User has shared this text with you: "+ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardWeatherExpandedController", cardWeatherExpandedController);
+    cardWeatherExpandedController.$inject = ["$scope","$http"];
+
+    function cardWeatherExpandedController($scope,$http) {
+        let ctrl = this;
+
+        ctrl.weather = $scope.cardExpandedController.data.weather;
+
+        ctrl.city = "";
+        ctrl.requestWeatherByCity = function(town){
+            var URL = 'http://api.openweathermap.org/data/2.5/weather?';
+      
+            var request = {
+                method: 'GET',
+                url: URL,
+                params: {
+                    q: town,
+                    mode: 'json',
+                    units: 'metric',
+                    cnt: '7',
+                    appid: '0473360f7aa183422a005a2374480706'
+                }
+            };
+            return $http(request);
+        }
+
+        ctrl.getWeather = function(city){
+            ctrl.requestWeatherByCity(city).then(function(response){
+                ctrl.weather = response;
+                ctrl.weather.city = response.data.name;
+                ctrl.weather.temp = "Temperature: "+response.data.main.temp+" °C";
+                ctrl.weather.feelsLike ="Feels Like: "+ response.data.main.feels_like+" °C";
+                ctrl.weather.maxAndMin = "Max: "+response.data.main.temp_max+" °C | Min: "+response.data.main.temp_min+" °C";
+                ctrl.weather.description = response.data.weather[0].description;
+                ctrl.weather.icon = `https://openweathermap.org/img/wn/${response.data.weather[0]["icon"]}@2x.png`;
+                console.log(response.data)
+        });
+        ctrl.city = "";
+    }
     }
 
 })();;
@@ -1431,10 +1661,28 @@
     let App = angular.module("app");
 
     App.controller("homeController", homeController);
-    homeController.$inject = ["$rootScope"];
+    homeController.$inject = ["$rootScope","cardGroupService"];
 
-    function homeController($rootScope) {
+    function homeController($rootScope,cardGroupService) {
         let ctrl = this;
+
+        ctrl.cardGroups = {};
+        cardGroupService.getAllGroups().then(d => {
+            if(Object.keys(d.data) != 0)
+                {
+                    console.log(d.data);
+                    let groups = [...new Set(d.data.map(card => card.group))];
+                    groups = groups.map(groupname => {
+                        return {
+                            name: groupname,
+                            cards: d.data.filter(card => card.group == groupname)
+                        }
+                    });
+                    ctrl.cardGroups = groups;
+                }
+            else
+                ctrl.cardGroups = new Array();
+        });
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({
@@ -1442,8 +1690,8 @@
                 cards: []
             });
         }
-
-        ctrl.cardGroups = [
+ 
+        /*ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -1451,6 +1699,11 @@
                         name: "Text Card",
                         type: "Text",
                         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    },
+                    {
+                        name: "Weather card",
+                        type: "Weather",
+                        weather: {}
                     },
                     {
                         name: "Text Card 2",
@@ -1503,7 +1756,7 @@
                     },
                 ]
             }
-        ];
+        ];*/
     }
 
 })();;
@@ -1925,6 +2178,29 @@
             templateUrl: 'app/modules/client/cards/normal/card-to-do-list.html',
             controller: "cardToDoListController",
             controllerAs: "cardToDoListController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardWeather", cardWeather);
+    cardWeather.$inject = ["$rootScope", "$compile"];
+
+    function cardWeather($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
+            templateUrl: 'app/modules/client/cards/normal/card-weather.html',
+            controller: "cardWeatherController",
+            controllerAs: "cardWeatherController",
             replace: true,
         }
     }

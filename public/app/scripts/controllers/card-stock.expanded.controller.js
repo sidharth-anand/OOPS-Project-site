@@ -4,14 +4,15 @@
     let App = angular.module("app");
 
     App.controller("cardStockExpandedController", cardStockExpandedController);
-    cardStockExpandedController.$inject = ["$scope"];
+    cardStockExpandedController.$inject = ["$scope","productService"];
 
-    function cardStockExpandedController($scope) {
+    function cardStockExpandedController($scope,productService) {
         let ctrl = this;
 
         ctrl.inventory = $scope.cardExpandedController.data.inventory;
 
-        ctrl.groceriesList = [{
+        ctrl.groceriesList = productService.getStock()
+        /*ctrl.groceriesList = [{
             id: 1,
             label: "Milk"
         },
@@ -30,7 +31,7 @@
         {
             id: 5,
             label: "Curd"
-        }]
+        }]*/
 
         ctrl.selectedModel = [];
         ctrl.searchSettings = {

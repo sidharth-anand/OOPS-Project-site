@@ -4,10 +4,28 @@
     let App = angular.module("app");
 
     App.controller("homeController", homeController);
-    homeController.$inject = ["$rootScope"];
+    homeController.$inject = ["$rootScope","cardGroupService"];
 
-    function homeController($rootScope) {
+    function homeController($rootScope,cardGroupService) {
         let ctrl = this;
+
+        ctrl.cardGroups = {};
+        cardGroupService.getAllGroups().then(d => {
+            if(Object.keys(d.data) != 0)
+                {
+                    console.log(d.data);
+                    let groups = [...new Set(d.data.map(card => card.group))];
+                    groups = groups.map(groupname => {
+                        return {
+                            name: groupname,
+                            cards: d.data.filter(card => card.group == groupname)
+                        }
+                    });
+                    ctrl.cardGroups = groups;
+                }
+            else
+                ctrl.cardGroups = new Array();
+        });
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({
@@ -15,8 +33,8 @@
                 cards: []
             });
         }
-
-        ctrl.cardGroups = [
+ 
+        /*ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -24,6 +42,11 @@
                         name: "Text Card",
                         type: "Text",
                         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    },
+                    {
+                        name: "Weather card",
+                        type: "Weather",
+                        weather: {}
                     },
                     {
                         name: "Text Card 2",
@@ -76,7 +99,7 @@
                     },
                 ]
             }
-        ];
+        ];*/
     }
 
 })();

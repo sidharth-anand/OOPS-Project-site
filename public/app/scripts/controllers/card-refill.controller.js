@@ -15,11 +15,18 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
             },
             getShareData: () => {
+                let itemDetails = "";
+                ctrl.data.refill.forEach(function(x){
+                    itemDetails.concat("Item - "+x.item + "Quantity - " + x.quantity + "\n");
+                })
                 return {
                     title: ctrl.data.name,
-                    text: ctrl.data.text
+                    text: "User has shared the scheduled refill of these items into the inventory: \n"+
+                    "Starting from "+ ctrl.data.startDate + "\n"+
+                    "With frequency set as: "+ ctrl.data.refillFreq
                 }
             }
         }

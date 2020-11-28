@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardBaseController", cardBaseController);
-    cardBaseController.$inject = ["$scope", "$uibModal"];
+    cardBaseController.$inject = ["$scope", "$uibModal", "cardService"];
 
-    function cardBaseController($scope, $uibModal) {
+    function cardBaseController($scope, $uibModal, cardService) {
         let ctrl = this;
 
         ctrl.cardOptions = $scope.cardOptions;
@@ -67,6 +67,7 @@
                 text: "Delete",
                 click: function($itemScope, $event) {
                     angular.element($event.delegateTarget).remove();
+                    cardService.deleteCardById(ctrl.cardData._id.$oid)
                 }
             }
         ]
