@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-27 */
+/*! oops-site 2020-11-28 */
 
 (function () {
     'use strict';
@@ -1282,6 +1282,76 @@
 
     let App = angular.module("app");
 
+    App.controller("cardWeatherController", cardWeatherController);
+    cardWeatherController.$inject = ["$scope"];
+
+    function cardWeatherController($scope) {
+        let ctrl = this;
+
+        ctrl.options = {
+            expandedSrc: "app/modules/client/cards/expanded/card-text.expanded.html",
+            onChange: (newData) => {
+                Object.keys(newData).forEach(d => {
+                    ctrl.data[d] = newData[d];
+                });
+            },
+            getShareData: () => {
+                return {
+                    title: ctrl.data.name,
+                    text: "User has shared this text with you: "+ctrl.data.text
+                }
+            }
+        }
+
+        ctrl.data = $scope.data;
+        ctrl.groupInfo = $scope.groupInfo;
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.controller("cardWeatherExpandedController", cardWeatherExpandedController);
+    cardWeatherExpandedController.$inject = ["$scope","$http"];
+
+    function cardWeatherExpandedController($scope,$http) {
+        let ctrl = this;
+
+        ctrl.weather = $scope.cardExpandedController.data.weather;
+
+        ctrl.requestWeatherByCity = function(town){
+            var URL = 'http://api.openweathermap.org/data/2.5/weather?';
+      
+            var request = {
+                method: 'GET',
+                url: URL,
+                params: {
+                    q: town,
+                    mode: 'json',
+                    units: 'metric',
+                    cnt: '7',
+                    appid: '0473360f7aa183422a005a2374480706h'
+                }
+            };
+            return $http(request);
+        }
+
+        ctrl.requestWeatherByCity('hyderabad').then(function(response){
+            ctrl.city = response.data.name;
+            ctrl.temp = response.data.temp;
+        }).error(function(err){
+            console.log(err);
+        })
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("diaryController", diaryController);
     diaryController.$inject = ["$transitions"];
 
@@ -1426,6 +1496,11 @@
                         name: "Text Card",
                         type: "Text",
                         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    },
+                    {
+                        name: "Weather card",
+                        type: "Weather",
+                        weather: {}
                     },
                     {
                         name: "Text Card 2",
@@ -1895,6 +1970,29 @@
             templateUrl: 'app/modules/client/cards/normal/card-to-do-list.html',
             controller: "cardToDoListController",
             controllerAs: "cardToDoListController",
+            replace: true,
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.directive("cardWeather", cardWeather);
+    cardWeather.$inject = ["$rootScope", "$compile"];
+
+    function cardWeather($rootScope, $compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                data: "=",
+                groupInfo: "=group"
+            },
+            templateUrl: 'app/modules/client/cards/normal/card-weather.html',
+            controller: "cardWeatherController",
+            controllerAs: "cardWeatherController",
             replace: true,
         }
     }
