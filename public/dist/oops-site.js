@@ -600,6 +600,7 @@
         return {
             call: function(method, url, params) {
                 $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
+                $http.defaults.headers.common['Content-type'] = 'application/json';
             
                 return $http({
                     method: method,
@@ -651,8 +652,8 @@
             editCardById: function(id,data) {
                 return baseAPIService.call('PUT', '/cards/'+ id, data)
             },
-            inputCard: function(){
-                return baseAPIService.call('POST', '/cards/',{})
+            inputCard: function(cardData){
+                return baseAPIService.call('POST', '/cards', cardData)
             }
         }
     }
@@ -835,9 +836,9 @@
     let App = angular.module("app");
 
     App.controller("cardGroupController", cardGroupController);
-    cardGroupController.$inject = ["$rootScope", "$scope"];
+    cardGroupController.$inject = ["$rootScope", "$scope", "cardService"];
 
-    function cardGroupController($rootScope, $scope) {
+    function cardGroupController($rootScope, $scope, cardService) {
         let ctrl = this;
 
         ctrl.data = $scope.groupData;
@@ -855,7 +856,9 @@
         ctrl.addCard = function(type) {
             let newcard = {
                 name: "Card " + (ctrl.data.cards.length + 1),
-                type: type
+                type: type,
+                category:type,
+                group: ctrl.data.name
             };
 
             switch (type) {
@@ -887,6 +890,8 @@
             }
 
             ctrl.data.cards.push(newcard);
+
+            cardService.inputCard(newcard);
         }
 
         $scope.$watch(function() {
@@ -1539,7 +1544,12 @@
         let ctrl = this;
 
         ctrl.cardGroups = {};
-        cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
+        cardGroupService.getAllGroups().then(d => {
+            if(Object.keys(d.data) != 0)
+                ctrl.cardGroups = d.data;
+            else
+                ctrl.cardGroups = new Array();
+        });
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({

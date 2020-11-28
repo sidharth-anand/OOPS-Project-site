@@ -10,7 +10,12 @@
         let ctrl = this;
 
         ctrl.cardGroups = {};
-        cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
+        cardGroupService.getAllGroups().then(d => {
+            if(Object.keys(d.data) != 0)
+                ctrl.cardGroups = d.data;
+            else
+                ctrl.cardGroups = new Array();
+        });
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({

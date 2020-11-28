@@ -17,8 +17,8 @@
             editCardById: function(id,data) {
                 return baseAPIService.call('PUT', '/cards/'+ id, data)
             },
-            inputCard: function(){
-                return baseAPIService.call('POST', '/cards/',{})
+            inputCard: function(cardData){
+                return baseAPIService.call('POST', '/cards', cardData)
             }
         }
     }

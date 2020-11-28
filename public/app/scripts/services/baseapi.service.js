@@ -11,6 +11,7 @@
         return {
             call: function(method, url, params) {
                 $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
+                $http.defaults.headers.common['Content-type'] = 'application/json';
             
                 return $http({
                     method: method,
