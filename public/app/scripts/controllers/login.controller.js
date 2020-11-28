@@ -21,6 +21,10 @@
                 });
             }
         }
+
+        ctrl.loginGithub = function() {
+            $rootScope.Auth.getGithubCode();
+        }
     }   
 
 })();

@@ -55,6 +55,7 @@
                     newcard.refill = [];
                     newcard.refillFreq = [];
                     newcard.startDate = new Date();
+                    newcard.cardid = [];
                     break;
             }
 
