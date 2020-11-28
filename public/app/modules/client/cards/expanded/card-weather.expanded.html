@@ -1,6 +1,14 @@
 <div ng-controller="cardWeatherExpandedController as cardWeatherExpandedController">
     <!--<p contenteditable="false" ng-contenteditable ng-model="cardWeatherExpandedController.data.text"></p>-->
-    <p>{{cardWeatherExpandedController.city}}</p>
-    <p>hello</p>
+    <div class="weatherBox">
+        <p>{{cardWeatherExpandedController.weather.city}}</p>
+        <img ng-src="{{cardWeatherExpandedController.weather.icon}}">
+        <p>{{cardWeatherExpandedController.weather.description}}</p>
+        <p>Temperature: {{cardWeatherExpandedController.weather.temp}} °C</p>
+        <p>Feels Like: {{cardWeatherExpandedController.weather.feelsLike}} °C</p>
+        <p>Max: {{cardWeatherExpandedController.weather.max}} °C | Min: {{cardWeatherExpandedController.weather.min}} °C</p>
+    </div>
+    
+    
     
 </div>

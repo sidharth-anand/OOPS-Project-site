@@ -10,7 +10,7 @@
         let ctrl = this;
 
         ctrl.options = {
-            expandedSrc: "app/modules/client/cards/expanded/card-text.expanded.html",
+            expandedSrc: "app/modules/client/cards/expanded/card-weather.expanded.html",
             onChange: (newData) => {
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];

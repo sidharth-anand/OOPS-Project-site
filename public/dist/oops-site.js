@@ -1289,7 +1289,7 @@
         let ctrl = this;
 
         ctrl.options = {
-            expandedSrc: "app/modules/client/cards/expanded/card-text.expanded.html",
+            expandedSrc: "app/modules/client/cards/expanded/card-weather.expanded.html",
             onChange: (newData) => {
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
@@ -1332,18 +1332,24 @@
                     mode: 'json',
                     units: 'metric',
                     cnt: '7',
-                    appid: '0473360f7aa183422a005a2374480706h'
+                    appid: '0473360f7aa183422a005a2374480706'
                 }
             };
             return $http(request);
         }
-
+        ctrl.weather.status = "";
         ctrl.requestWeatherByCity('hyderabad').then(function(response){
-            ctrl.city = response.data.name;
-            ctrl.temp = response.data.temp;
-        }).error(function(err){
-            console.log(err);
-        })
+            ctrl.weather = response;
+            ctrl.weather.city = response.data.name;
+            ctrl.weather.temp = response.data.main.temp;
+            ctrl.weather.feelsLike = response.data.main.feels_like;
+            ctrl.weather.max = response.data.main.temp_max;
+            ctrl.weather.min = response.data.main.temp_min;
+            ctrl.weather.description = response.data.weather[0].description;
+            ctrl.weather.icon = `https://openweathermap.org/img/wn/${response.data.weather[0]["icon"]}@2x.png`;
+            console.log(response.data)
+            console.log(response.data.main.temp)
+        });
     }
 
 })();;
