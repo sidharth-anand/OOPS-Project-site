@@ -9,7 +9,8 @@
     function homeController($rootScope,cardGroupService) {
         let ctrl = this;
 
-        ctrl.cardGroups = cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
+        ctrl.cardGroups = {};
+        cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({
@@ -17,8 +18,8 @@
                 cards: []
             });
         }
-
-        ctrl.cardGroups = [
+ 
+        /*ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -77,7 +78,7 @@
                     },
                 ]
             }
-        ];
+        ];*/
     }
 
 })();

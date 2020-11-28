@@ -9,7 +9,10 @@
     function productService(baseAPIService) {
         return {
             getStock: function(){
-                return baseAPIService.call('GET','/stock', {})
+                return baseAPIService.call('GET','/stock', {});
+            },
+            checkRefill: function(){
+                return baseAPIService.call('POST','/refill',{});
             }
         }
     }

@@ -10,6 +10,9 @@
         return {
             getAllGroups: function() {
                 return baseAPIService.call('GET', '/cards/all', {});
+            },
+            deleteGroup: function(id) {
+                return baseAPIService.call('DELETE', '/groups/'+id,{});
             }
         }
     }

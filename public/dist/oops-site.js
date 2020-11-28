@@ -1,4 +1,4 @@
-/*! oops-site 2020-11-27 */
+/*! oops-site 2020-11-28 */
 
 (function () {
     'use strict';
@@ -624,6 +624,9 @@
         return {
             getAllGroups: function() {
                 return baseAPIService.call('GET', '/cards/all', {});
+            },
+            deleteGroup: function(id) {
+                return baseAPIService.call('DELETE', '/groups/'+id,{});
             }
         }
     }
@@ -647,6 +650,35 @@
             },
             editCardById: function(id,data) {
                 return baseAPIService.call('PUT', '/cards/'+ id, data)
+            },
+            inputCard: function(){
+                return baseAPIService.call('POST', '/cards/',{})
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("diaryService", diaryService);
+    diaryService.$inject = ["baseAPIService"];
+
+    function diaryService(baseAPIService) {
+        return {
+            diaryEntry: function(data){
+                return baseAPIService.call('POST','/diary',data);
+            },
+            getDiaryById: function(id){
+                return baseAPIService.call('GET','/diary/'+id,{});
+            },
+            editDiaryById: function(id,data){
+                return baseAPIService.call('PUT','/diary/'+id,data);
+            },
+            getAllDiaryEntries: function(){
+                return baseAPIService.call('GET','/diary/all');
             }
         }
     }
@@ -663,7 +695,10 @@
     function productService(baseAPIService) {
         return {
             getStock: function(){
-                return baseAPIService.call('GET','/stock', {})
+                return baseAPIService.call('GET','/stock', {});
+            },
+            checkRefill: function(){
+                return baseAPIService.call('POST','/refill',{});
             }
         }
     }
@@ -1503,7 +1538,8 @@
     function homeController($rootScope,cardGroupService) {
         let ctrl = this;
 
-        ctrl.cardGroups = cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
+        ctrl.cardGroups = {};
+        cardGroupService.getAllGroups().then(d => ctrl.cardGroups=d.data);
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({
@@ -1511,8 +1547,8 @@
                 cards: []
             });
         }
-
-        ctrl.cardGroups = [
+ 
+        /*ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -1571,7 +1607,7 @@
                     },
                 ]
             }
-        ];
+        ];*/
     }
 
 })();;
