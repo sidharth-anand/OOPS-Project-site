@@ -592,6 +592,124 @@
 
     let App = angular.module("app");
 
+    App.service("baseAPIService", baseAPIService);
+    baseAPIService.$inject = ["$http", "$rootScope"];
+
+    function baseAPIService($http, $rootScope) {
+        const serverPath = "http://localhost:5000";
+        return {
+            call: function(method, url, params) {
+                $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
+                $http.defaults.headers.common['Content-type'] = 'application/json';
+            
+                return $http({
+                    method: method,
+                    url: serverPath + url,
+                    params: method == 'GET' ? params : {},
+                    data: method != 'GET' ? params : {},
+                });
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("cardGroupService", cardGroupService);
+    cardGroupService.$inject = ["baseAPIService"];
+
+    function cardGroupService(baseAPIService) {
+        return {
+            getAllGroups: function() {
+                return baseAPIService.call('GET', '/cards/all', {});
+            },
+            deleteGroup: function(id) {
+                return baseAPIService.call('DELETE', '/groups/'+id,{});
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("cardService", cardService);
+    cardService.$inject = ["baseAPIService"];
+
+    function cardService(baseAPIService) {
+        return {
+            getCardById: function(id) {
+                return baseAPIService.call('GET', '/cards/'+ id, {});
+            },
+            deleteCardById: function(id) {
+                return baseAPIService.call('DELETE', '/cards/'+ id, {})
+            },
+            editCardById: function(id,data) {
+                return baseAPIService.call('PUT', '/cards/'+ id, data)
+            },
+            inputCard: function(cardData){
+                return baseAPIService.call('POST', '/cards', cardData)
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("diaryService", diaryService);
+    diaryService.$inject = ["baseAPIService"];
+
+    function diaryService(baseAPIService) {
+        return {
+            diaryEntry: function(data){
+                return baseAPIService.call('POST','/diary',data);
+            },
+            getDiaryById: function(id){
+                return baseAPIService.call('GET','/diary/'+id,{});
+            },
+            editDiaryById: function(id,data){
+                return baseAPIService.call('PUT','/diary/'+id,data);
+            },
+            getAllDiaryEntries: function(){
+                return baseAPIService.call('GET','/diary/all');
+            }
+        }
+    }
+
+})();;
+(function() {
+    'use strict';
+
+    let App = angular.module("app");
+
+    App.service("productService", productService);
+    productService.$inject = ["baseAPIService"];
+
+    function productService(baseAPIService) {
+        return {
+            getStock: function(){
+                return baseAPIService.call('GET','/stock', {});
+            },
+            checkRefill: function(){
+                return baseAPIService.call('POST','/refill',{});
+            }
+        }
+    }
+
+})();;
+(function(){
+    'use strict';
+
+    let App = angular.module("app");
+
     App.controller("cardBaseController", cardBaseController);
     cardBaseController.$inject = ["$scope", "$uibModal"];
 
@@ -659,6 +777,7 @@
                 text: "Delete",
                 click: function($itemScope, $event) {
                     angular.element($event.delegateTarget).remove();
+                    cardService.deleteCardById(cardExpandedController.data.id)
                 }
             }
         ]
@@ -717,9 +836,9 @@
     let App = angular.module("app");
 
     App.controller("cardGroupController", cardGroupController);
-    cardGroupController.$inject = ["$rootScope", "$scope"];
+    cardGroupController.$inject = ["$rootScope", "$scope", "cardService"];
 
-    function cardGroupController($rootScope, $scope) {
+    function cardGroupController($rootScope, $scope, cardService) {
         let ctrl = this;
 
         ctrl.data = $scope.groupData;
@@ -729,6 +848,7 @@
             {
                 text: "Delete",
                 click: function($itemScope, $event) {
+                    cardGroupsService.deleteGroup(ctrl.data.name);
                     angular.element($event.delegateTarget).remove();
                 }
             }
@@ -737,7 +857,9 @@
         ctrl.addCard = function(type) {
             let newcard = {
                 name: "Card " + (ctrl.data.cards.length + 1),
-                type: type
+                type: type,
+                category:type,
+                group: ctrl.data.name
             };
 
             switch (type) {
@@ -769,6 +891,8 @@
             }
 
             ctrl.data.cards.push(newcard);
+
+            cardService.inputCard(newcard);
         }
 
         $scope.$watch(function() {
@@ -792,9 +916,12 @@
         ctrl.options = {
             expandedSrc: "app/modules/client/cards/expanded/card-meeting.expanded.html",
             onChange: (newData) => {
+
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
+                
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 return {
@@ -850,6 +977,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 let itemDetails = "";
@@ -995,6 +1123,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 let reminderDetails = "";
@@ -1076,6 +1205,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 let inventoryDetails = "";
@@ -1100,14 +1230,15 @@
     let App = angular.module("app");
 
     App.controller("cardStockExpandedController", cardStockExpandedController);
-    cardStockExpandedController.$inject = ["$scope"];
+    cardStockExpandedController.$inject = ["$scope","productService"];
 
-    function cardStockExpandedController($scope) {
+    function cardStockExpandedController($scope,productService) {
         let ctrl = this;
 
         ctrl.inventory = $scope.cardExpandedController.data.inventory;
 
-        ctrl.groceriesList = [{
+        ctrl.groceriesList = productService.getStock()
+        /*ctrl.groceriesList = [{
             id: 1,
             label: "Milk"
         },
@@ -1126,7 +1257,7 @@
         {
             id: 5,
             label: "Curd"
-        }]
+        }]*/
 
         ctrl.selectedModel = [];
         ctrl.searchSettings = {
@@ -1181,6 +1312,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 return {
@@ -1260,6 +1392,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 let tasks = "";
@@ -1484,10 +1617,28 @@
     let App = angular.module("app");
 
     App.controller("homeController", homeController);
-    homeController.$inject = ["$rootScope"];
+    homeController.$inject = ["$rootScope","cardGroupService"];
 
-    function homeController($rootScope) {
+    function homeController($rootScope,cardGroupService) {
         let ctrl = this;
+
+        ctrl.cardGroups = {};
+        cardGroupService.getAllGroups().then(d => {
+            if(Object.keys(d.data) != 0)
+                {
+                    console.log(d.data);
+                    let groups = [...new Set(d.data.map(card => card.group))];
+                    groups = groups.map(groupname => {
+                        return {
+                            name: groupname,
+                            cards: d.data.filter(card => card.group == groupname)
+                        }
+                    });
+                    ctrl.cardGroups = groups;
+                }
+            else
+                ctrl.cardGroups = new Array();
+        });
 
         ctrl.addGroup = function() {
             ctrl.cardGroups.push({
@@ -1495,8 +1646,8 @@
                 cards: []
             });
         }
-
-        ctrl.cardGroups = [
+ 
+        /*ctrl.cardGroups = [
             {
                 name: "Cards 1",
                 cards: [
@@ -1560,7 +1711,7 @@
                     },
                 ]
             }
-        ];
+        ];*/
     }
 
 })();;

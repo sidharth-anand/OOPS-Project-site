@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardGroupController", cardGroupController);
-    cardGroupController.$inject = ["$rootScope", "$scope"];
+    cardGroupController.$inject = ["$rootScope", "$scope", "cardService"];
 
-    function cardGroupController($rootScope, $scope) {
+    function cardGroupController($rootScope, $scope, cardService) {
         let ctrl = this;
 
         ctrl.data = $scope.groupData;
@@ -16,6 +16,7 @@
             {
                 text: "Delete",
                 click: function($itemScope, $event) {
+                    cardGroupsService.deleteGroup(ctrl.data.name);
                     angular.element($event.delegateTarget).remove();
                 }
             }
@@ -24,7 +25,9 @@
         ctrl.addCard = function(type) {
             let newcard = {
                 name: "Card " + (ctrl.data.cards.length + 1),
-                type: type
+                type: type,
+                category:type,
+                group: ctrl.data.name
             };
 
             switch (type) {
@@ -56,6 +59,8 @@
             }
 
             ctrl.data.cards.push(newcard);
+
+            cardService.inputCard(newcard);
         }
 
         $scope.$watch(function() {

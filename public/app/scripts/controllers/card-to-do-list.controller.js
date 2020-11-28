@@ -15,6 +15,7 @@
                 Object.keys(newData).forEach(d => {
                     ctrl.data[d] = newData[d];
                 });
+                cardService.editCardById(ctrl.data.id,ctrl.data)
             },
             getShareData: () => {
                 let tasks = "";
