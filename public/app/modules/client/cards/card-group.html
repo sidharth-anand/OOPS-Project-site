@@ -14,7 +14,8 @@
                 </card-stock>
                 <card-refill ng-switch-when="Grocery refill" data="card" group="cardGroupController.groupInfo">
                 </card-refill>
-                <card-weather ng-switch-when="Weather" data="card" group="cardGroupController.groupInfo"></card-weather>
+                <card-weather ng-switch-when="Weather" data="card" group="cardGroupController.groupInfo">      
+                </card-weather>
             </div>
         </div>
         <div class="mx-2 mt-2 px-1 py-2 add-card d-flex align-items-center">
@@ -24,6 +25,7 @@
             <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('Meeting')"><i class="fas fa-handshake"></i></button>
             <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('Grocery stock')"><i class="fas fa-carrot"></i></button>
             <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('Grocery refill')"><i class="fas fa-sync"></i></button>
+            <button class="btn btn-outline-light btn-transparent btn-transparent-light btn-sm" ng-click="cardGroupController.addCard('Weather')"><i class="fas fa-cloud"></i></button>
         </div>
     </div>
 </div>

@@ -609,7 +609,7 @@
 
             $transitions.onSuccess({to:"login"}, transition => {
                 let matches = /(?<=code=)[\w]+/g.exec(window.location)
-                if(matches.length) {
+                if(matches && matches.length) {
                     console.log(matches[0]);
                     //Auth.loginWithGithub(matches[0]);
                     window.location = (window.location + "").split("?")[0] + "#!/login";
@@ -636,7 +636,6 @@
         return {
             call: function(method, url, params) {
                 $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.Auth.getAccessToken();
-                $http.defaults.headers.common['Content-type'] = 'application/json';
             
                 return $http({
                     method: method,
@@ -686,7 +685,9 @@
                 return baseAPIService.call('DELETE', '/cards/'+ id, {})
             },
             editCardById: function(id,data) {
-                return baseAPIService.call('PUT', '/cards/'+ id, data)
+                let sendData = JSON.parse(JSON.stringify(data));
+                delete sendData._id;
+                return baseAPIService.call('PUT', '/cards/'+ id, sendData);
             },
             inputCard: function(cardData){
                 return baseAPIService.call('POST', '/cards', cardData)
@@ -942,9 +943,9 @@
     let App = angular.module("app");
 
     App.controller("cardMeetingController", cardMeetingController);
-    cardMeetingController.$inject = ["$scope"];
+    cardMeetingController.$inject = ["$scope", "cardService"];
 
-    function cardMeetingController($scope) {
+    function cardMeetingController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -1000,9 +1001,9 @@
     let App = angular.module("app");
 
     App.controller("cardRefillController", cardRefillController);
-    cardRefillController.$inject = ["$scope"];
+    cardRefillController.$inject = ["$scope", "cardService"];
 
-    function cardRefillController($scope) {
+    function cardRefillController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -1155,9 +1156,9 @@
     let App = angular.module("app");
 
     App.controller("cardReminderController", cardReminderController);
-    cardReminderController.$inject = ["$scope"];
+    cardReminderController.$inject = ["$scope", "cardService"];
 
-    function cardReminderController($scope) {
+    function cardReminderController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -1237,9 +1238,9 @@
     let App = angular.module("app");
 
     App.controller("cardStockController", cardStockController);
-    cardStockController.$inject = ["$scope"];
+    cardStockController.$inject = ["$scope", "cardService"];
 
-    function cardStockController($scope) {
+    function cardStockController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -1344,9 +1345,9 @@
     let App = angular.module("app");
 
     App.controller("cardTextController", cardTextController);
-    cardTextController.$inject = ["$scope"];
+    cardTextController.$inject = ["$scope", "cardService"];
 
-    function cardTextController($scope) {
+    function cardTextController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -1356,7 +1357,14 @@
                     ctrl.data[d] = newData[d];
                 });
                 console.log(ctrl.data);
-                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
+                let req = cardService.editCardById(ctrl.data._id.$oid,ctrl.data);
+                console.log(req);
+
+                req.then(d => {
+                    console.log(d);
+                }).catch(d => {
+                    console.log(d);
+                })
             },
             getShareData: () => {
                 return {
@@ -1425,9 +1433,9 @@
     let App = angular.module("app");
 
     App.controller("cardToDoListController", cardToDoListController);
-    cardToDoListController.$inject = ["$scope"];
+    cardToDoListController.$inject = ["$scope", "cardService"];
 
-    function cardToDoListController($scope) {
+    function cardToDoListController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {

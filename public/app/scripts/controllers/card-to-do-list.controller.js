@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardToDoListController", cardToDoListController);
-    cardToDoListController.$inject = ["$scope"];
+    cardToDoListController.$inject = ["$scope", "cardService"];
 
-    function cardToDoListController($scope) {
+    function cardToDoListController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {

@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardRefillController", cardRefillController);
-    cardRefillController.$inject = ["$scope"];
+    cardRefillController.$inject = ["$scope", "cardService"];
 
-    function cardRefillController($scope) {
+    function cardRefillController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {

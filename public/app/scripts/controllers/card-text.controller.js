@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardTextController", cardTextController);
-    cardTextController.$inject = ["$scope"];
+    cardTextController.$inject = ["$scope", "cardService"];
 
-    function cardTextController($scope) {
+    function cardTextController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {
@@ -16,7 +16,14 @@
                     ctrl.data[d] = newData[d];
                 });
                 console.log(ctrl.data);
-                cardService.editCardById(ctrl.data._id.$oid,ctrl.data)
+                let req = cardService.editCardById(ctrl.data._id.$oid,ctrl.data);
+                console.log(req);
+
+                req.then(d => {
+                    console.log(d);
+                }).catch(d => {
+                    console.log(d);
+                })
             },
             getShareData: () => {
                 return {

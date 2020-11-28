@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardStockController", cardStockController);
-    cardStockController.$inject = ["$scope"];
+    cardStockController.$inject = ["$scope", "cardService"];
 
-    function cardStockController($scope) {
+    function cardStockController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {

@@ -608,7 +608,7 @@
 
             $transitions.onSuccess({to:"login"}, transition => {
                 let matches = /(?<=code=)[\w]+/g.exec(window.location)
-                if(matches.length) {
+                if(matches && matches.length) {
                     console.log(matches[0]);
                     //Auth.loginWithGithub(matches[0]);
                     window.location = (window.location + "").split("?")[0] + "#!/login";

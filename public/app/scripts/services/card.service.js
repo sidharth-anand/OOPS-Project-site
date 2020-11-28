@@ -15,7 +15,9 @@
                 return baseAPIService.call('DELETE', '/cards/'+ id, {})
             },
             editCardById: function(id,data) {
-                return baseAPIService.call('PUT', '/cards/'+ id, data)
+                let sendData = JSON.parse(JSON.stringify(data));
+                delete sendData._id;
+                return baseAPIService.call('PUT', '/cards/'+ id, sendData);
             },
             inputCard: function(cardData){
                 return baseAPIService.call('POST', '/cards', cardData)

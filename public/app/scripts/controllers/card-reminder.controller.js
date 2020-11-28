@@ -4,9 +4,9 @@
     let App = angular.module("app");
 
     App.controller("cardReminderController", cardReminderController);
-    cardReminderController.$inject = ["$scope"];
+    cardReminderController.$inject = ["$scope", "cardService"];
 
-    function cardReminderController($scope) {
+    function cardReminderController($scope, cardService) {
         let ctrl = this;
 
         ctrl.options = {

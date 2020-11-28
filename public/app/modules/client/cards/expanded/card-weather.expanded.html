@@ -1,8 +1,8 @@
 <div ng-controller="cardWeatherExpandedController as cardWeatherExpandedController">
     <!--<p contenteditable="false" ng-contenteditable ng-model="cardWeatherExpandedController.data.text"></p>-->
-    <form ng-submit="cardWeatherExpandedController.getWeather(cardWeatherExpandedController.city)">
-    <input type="search" placeholder="Enter City" ng-model="cardWeatherExpandedController.city">
-    <button type="submit">Search</button>
+    <form ng-submit="cardWeatherExpandedController.getWeather(cardWeatherExpandedController.city)" class="form-row">
+        <input type="search" placeholder="Enter City" ng-model="cardWeatherExpandedController.city" class="form-control form-control-sm col-md-6">
+        <button type="submit" class="btn btn-outline-light btn-transparent-light btn-transparent col-md-3 text-center">Search</button>
     </form>
     <div class="weatherBox">
         <p>{{cardWeatherExpandedController.weather.city}}</p>
@@ -12,7 +12,7 @@
         <p>{{cardWeatherExpandedController.weather.feelsLike}}</p>
         <p>{{cardWeatherExpandedController.weather.maxAndMin}}{{cardWeatherExpandedController.weather.min}}</p>
     </div>
-    
-    
-    
+
+
+
 </div>
