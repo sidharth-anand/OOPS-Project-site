@@ -6,6 +6,7 @@
   "scripts": {
     "setup": "npm install http-server -g && npm install yarn -g && yarn set version latest",
     "install-all": "npm run setup && npm install --only=dev && npm run yarn-install",
+    "build-all": "npm run install-all && grunt build",
     "yarn-install": "yarn install --modules-folder ./public/yarn_components",
     "test": "test",
     "start": "http-server ./public -a localhost -p 8000 -c-1 -o"
