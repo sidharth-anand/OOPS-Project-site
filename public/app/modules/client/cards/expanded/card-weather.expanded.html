@@ -4,15 +4,12 @@
         <input type="search" placeholder="Enter City" ng-model="cardWeatherExpandedController.city" class="form-control form-control-sm col-md-6">
         <button type="submit" class="btn btn-outline-light btn-transparent-light btn-transparent col-md-3 text-center">Search</button>
     </form>
-    <div class="weatherBox">
-        <p>{{cardWeatherExpandedController.weather.city}}</p>
-        <img ng-src="{{cardWeatherExpandedController.weather.icon}}">
-        <p>{{cardWeatherExpandedController.weather.description}}</p>
-        <p>{{cardWeatherExpandedController.weather.temp}}</p>
-        <p>{{cardWeatherExpandedController.weather.feelsLike}}</p>
-        <p>{{cardWeatherExpandedController.weather.maxAndMin}}{{cardWeatherExpandedController.weather.min}}</p>
+    <div class="text-center mt-3 font-s20">
+        <span class="text-light mr-2">{{cardWeatherExpandedController.cityWeatherData[cardWeatherExpandedController.city].name}}</span>
+        <span><i class="{{cardWeatherExpandedController.cityWeatherData[cardWeatherExpandedController.city].icon}} mr-2"></i></span>
+        <span class="text-light mr-2">{{cardWeatherExpandedController.cityWeatherData[cardWeatherExpandedController.city].description}}</span>
+        <span class="text-light mr-2">{{cardWeatherExpandedController.cityWeatherData[cardWeatherExpandedController.city].min}}/{{cardWeatherExpandedController.cityWeatherData[cardWeatherExpandedController.city].max}}</span>
     </div>
-
 
 
 </div>

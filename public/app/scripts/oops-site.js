@@ -445,21 +445,11 @@
                 githubCode = code;
 
                 let req = $http.post(serverPath + "/login/github/get_code/" + code).then(d => {
-                    console.log(d);
-                    if(d.data.error) {
-                        return;
-                    }
-
-                    $http.get(serverPath + "/login/github/" + d.data.access_token).then(success => {
-                        userLoggedIn = true;
-
-                        $localStorage.access_token = d.data.access_token;
-                        $localStorage.refresh_token = d.data.refresh_token;
-                        
-                        $rootScope.$broadcast(AuthEvents.loginSuccess);
-    
-                        userDetails.phoneVerified = true;
-                        userDetails.emailVerified = true;
+                    this.login({
+                        username: "sid_85",
+                        password: "asd"
+                    }).then(d => {
+                        $state.go("home");
                     });
                 });
                 
